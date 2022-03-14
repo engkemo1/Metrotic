@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:metrotic/widget/BackGround.dart';
@@ -17,38 +16,38 @@ class SignIn extends StatelessWidget {
         body: SafeArea(
           child: ListView(
             children: <Widget>[
-             Container(
-               height: MediaQuery.of(context).size.height*0.4,
-               child:  BackGround(),
-             ),
+              Container(
+                height: MediaQuery.of(context).size.height*0.4,
+                child:  BackGround(),
+              ),
               SizedBox(
                 height: 40,
               ),
-           Container(
-               padding: EdgeInsets.only(left:width>1000?width*0.20:width> 400?width*0.15:30,right: width>1000?width*0.20:width> 400?width*0.15:30),
-               margin: EdgeInsets.only(left:width>1000?width*0.20:width> 400?width*0.15:30,right: width>1000?width*0.20:width> 400?width*0.15:30),
+              Container(
+                  padding: EdgeInsets.only(left:width>1000?width*0.20:width> 400?width*0.15:30,right: width>1000?width*0.20:width> 400?width*0.15:30),
+                  margin: EdgeInsets.only(left:width>1000?width*0.20:width> 400?width*0.15:30,right: width>1000?width*0.20:width> 400?width*0.15:30),
 
 
-               child:
-Column(
-  children: [
-    TextInput(
-      name: "Phone Number",
-      hint: "Enter Your Number",
-    ),
-    SizedBox(
-      height: 20,
-    ),
-    TextInput(
-      name: "Password",
-      hint: "Enter Your Password",
-    ),
-  ],
-)
+                  child:
+                  Column(
+                    children: [
+                      TextInput(
+                        name: "Phone Number",
+                        hint: "Enter Your Number",
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      TextInput(
+                        name: "Password",
+                        hint: "Enter Your Password",
+                      ),
+                    ],
+                  )
 
 
 
-           ),
+              ),
 
 
               SizedBox(
@@ -79,7 +78,7 @@ Column(
                           height: 1.2307692307692308,
                         ),
                         textHeightBehavior:
-                            TextHeightBehavior(applyHeightToFirstAscent: false),
+                        TextHeightBehavior(applyHeightToFirstAscent: false),
                         softWrap: false,
                       ),
                     )),

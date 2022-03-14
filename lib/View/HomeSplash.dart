@@ -19,7 +19,7 @@ class _HomeSplashState extends State<HomeSplash> {
     return Scaffold(
       body:GestureDetector(
         onTap: (){
-Navigator.push(context, MaterialPageRoute(builder: (_)=>SignIn()));
+Navigator.push(context, MaterialPageRoute(builder: (_)=> SignIn()));
         },
         child:  Stack(
           children: <Widget>[

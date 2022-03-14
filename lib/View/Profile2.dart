@@ -1,8 +1,12 @@
-
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
+import 'package:metrotic/Controller/PickImage.dart';
+import 'package:metrotic/helper.dart';
 import 'package:metrotic/widget/AppBar.dart';
 import 'package:metrotic/widget/Person.dart';
-
+import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 class Profile extends StatefulWidget {
 
   @override
@@ -10,23 +14,14 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-  // final picker = ImagePicker();
-  // late Future<PickedFile?> pickedFile = Future.value(null);
-  // var imageFile;
-  // _getFromGallery() async {
-  //   var pickedFile = (await picker.pickImage(
-  //     source: ImageSource.gallery,
-  //   ));
-  //   if (pickedFile != null) {
-  //     setState(() {
-  //       imageFile = File();
-  //     });
-  //   }
-  // }
+
+  @override
 
 
   @override
   Widget build(BuildContext context) {
+    var provider= Provider.of<GetImage>(context);
+
     var w = MediaQuery.of(context).size.width;
     var h = MediaQuery.of(context).size.height;
 
@@ -52,9 +47,36 @@ class _ProfileState extends State<Profile> {
                       color: const Color(0xff00334a),
                       color2: Colors.white,
                       size: 140,
-                      reduis: 100),
+                      reduis: 100,),
                   InkWell(
-                    onTap: () {},
+                    onTap: () {
+                    showAnimatedDialog(
+                      context: context,
+                      barrierDismissible: true,
+                      builder: (BuildContext context) {
+
+                        return Center(
+                          child:  Container(
+                            decoration: BoxDecoration(
+                                color:Colors.green,
+
+                                borderRadius: BorderRadius.circular(20)
+                            ),
+                            height: 100,width: 200,
+                            child:  Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [ GestureDetector(child: Text("Camera",style: TextStyle(fontSize: 10,color: Colors.white,decoration: TextDecoration.none),),onTap: (){                        provider.getImage(ImageSource.gallery);
+                              },),GestureDetector(child: Text("Gallery",style: TextStyle(fontSize: 10,color: Colors.white,decoration: TextDecoration.none)),onTap: (){},),],
+                            ),
+                          ),
+                        );
+                      },
+                      animationType: DialogTransitionType.size,
+                      curve: Curves.fastOutSlowIn,
+                      duration: Duration(seconds: 1),
+                    );
+
+                    },
                     child: Image.asset(
                       "assets/edit.png",
                       height: 30,

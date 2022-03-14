@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:metrotic/View/SignIn.dart';
@@ -80,13 +79,15 @@ class BackGroundSignUp extends StatelessWidget {
                     softWrap: false,
                   ),
                 ),
-                SizedBox(height: 2,)
-                ,
-                SvgPicture.string(
-                  _svg_bao9z,
-                  allowDrawingOutsideViewBox: true,
-                  fit: BoxFit.fill,
-                ),
+
+               Container(
+                 height: height/200,width: width*0.30,
+                 decoration: BoxDecoration(
+                     color: Colors.green,
+
+                     borderRadius: BorderRadius.circular(10)
+                 ),
+               )
               ],)
 
             ],
@@ -102,5 +103,3 @@ class BackGroundSignUp extends StatelessWidget {
 
   }
 }
-const String _svg_bao9z =
-    '<svg viewBox="256.8 231.0 128.4 1.0" ><path transform="translate(256.78, 231.0)" d="M 0 0 L 128.4338989257812 0" fill="none" stroke="#00da82" stroke-width="10" stroke-miterlimit="4" stroke-linecap="round" /></svg>';

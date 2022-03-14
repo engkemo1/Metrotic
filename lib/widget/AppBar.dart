@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:metrotic/View/Profile2.dart';
@@ -23,7 +22,7 @@ class AppBarr extends StatelessWidget {
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.cyan,
+            color: Colors.green,
             blurRadius: 1,
             offset: Offset(1, 8), // changes position of shadow
           ),
@@ -50,16 +49,16 @@ class AppBarr extends StatelessWidget {
               Row(
                 children: [
                   InkWell(
-                    onTap: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (_)=>Profile()));
+                      onTap: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (_)=>Profile()));
 
-                    },
+                      },
                       child: Person(
-                    high: 50,
-                    width: 50,
-                    color: Colors.white,
-                    color2: const Color(0xff00334a), reduis: 30,size: 40,
-                  )),
+                        high: 50,
+                        width: 50,
+                        color: Colors.white,
+                        color2: const Color(0xff00334a), reduis: 30,size: 40,
+                      )),
                   SizedBox(width: 10,),
                   Padding(
                     padding: EdgeInsets.only(right: 10),

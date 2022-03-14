@@ -21,67 +21,67 @@ class SignUp extends StatelessWidget {
             SizedBox(
               height: 40,
             ),
-       Container(
- padding: EdgeInsets.only(left:width>1000?width*0.20:width> 400?width*0.15:30,right: width>1000?width*0.20:width> 400?width*0.15:30),
-         margin: EdgeInsets.only(left:width>1000?width*0.20:width> 400?width*0.15:30,right: width>1000?width*0.20:width> 400?width*0.15:30),
+            Container(
+              padding: EdgeInsets.only(left:width>1000?width*0.20:width> 400?width*0.15:30,right: width>1000?width*0.20:width> 400?width*0.15:30),
+              margin: EdgeInsets.only(left:width>1000?width*0.20:width> 400?width*0.15:30,right: width>1000?width*0.20:width> 400?width*0.15:30),
 
-         child: Column(children: [
-           TextInput(
-               name: "Name",
-               hint: "Enter Your Full Name",
-             ),
-
-
-           SizedBox(
-             height: 20,
-           ),
-
-             TextInput(
-               name: "Phone Number",
-               hint: "Enter Your Number",
-
-           ),
-
-           SizedBox(
-             height: 20,
-           ),
-           TextInput(
-               name: "Email",
-               hint: "Enter Your Email",
-
-           ),
-
-           SizedBox(
-             height: 20,
-           ),
-           TextInput(
-               name: "Password",
-               hint: "Enter Your Password",
-
-           ),
+              child: Column(children: [
+                TextInput(
+                  name: "Name",
+                  hint: "Enter Your Full Name",
+                ),
 
 
-           SizedBox(
-             height: 20,
-           ),
-          TextInput(
-               name: "Tag ID",
-               hint: "Enter Your Tag ID",
+                SizedBox(
+                  height: 20,
+                ),
 
-           ),
+                TextInput(
+                  name: "Phone Number",
+                  hint: "Enter Your Number",
+
+                ),
+
+                SizedBox(
+                  height: 20,
+                ),
+                TextInput(
+                  name: "Email",
+                  hint: "Enter Your Email",
+
+                ),
+
+                SizedBox(
+                  height: 20,
+                ),
+                TextInput(
+                  name: "Password",
+                  hint: "Enter Your Password",
+
+                ),
 
 
-           SizedBox(
-             height: 20,
-           ),
-          TextInput(
-               name: "National ID",
-               hint: "Enter Your National ID",
+                SizedBox(
+                  height: 20,
+                ),
+                TextInput(
+                  name: "Tag ID",
+                  hint: "Enter Your Tag ID",
 
-           ),
+                ),
 
-         ],),
-       ),
+
+                SizedBox(
+                  height: 20,
+                ),
+                TextInput(
+                  name: "National ID",
+                  hint: "Enter Your National ID",
+
+                ),
+
+              ],),
+            ),
 
             SizedBox(
               height: 20,
@@ -122,36 +122,36 @@ class SignUp extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-              'Already have an account?',
-              style: TextStyle(
-                fontFamily: 'Montserrat',
-                fontSize: 14,
-                color: const Color(0xff00334a),
-                height: 1.5714285714285714,
-              ),
-              textHeightBehavior:
+                  'Already have an account?',
+                  style: TextStyle(
+                    fontFamily: 'Montserrat',
+                    fontSize: 14,
+                    color: const Color(0xff00334a),
+                    height: 1.5714285714285714,
+                  ),
+                  textHeightBehavior:
                   TextHeightBehavior(applyHeightToFirstAscent: false),
-              softWrap: false,
-            ),
+                  softWrap: false,
+                ),
                 GestureDetector(
                   onTap: (){
                     Navigator.push(context, MaterialPageRoute(builder: (_)=>SignIn()));
 
                   },
                   child: Text(
-                'Log In',
+                    'Log In',
 
-                style: TextStyle(
-                  fontFamily: 'Montserrat',
-                  fontSize: 14,
-                  color: const Color(0xff006032),
-                  fontWeight: FontWeight.w700,
-                  height: 1.5714285714285714,
-                ),
-                textHeightBehavior:
+                    style: TextStyle(
+                      fontFamily: 'Montserrat',
+                      fontSize: 14,
+                      color: const Color(0xff006032),
+                      fontWeight: FontWeight.w700,
+                      height: 1.5714285714285714,
+                    ),
+                    textHeightBehavior:
                     TextHeightBehavior(applyHeightToFirstAscent: false),
-                softWrap: false,
-              ),
+                    softWrap: false,
+                  ),
 
                 )
               ],
