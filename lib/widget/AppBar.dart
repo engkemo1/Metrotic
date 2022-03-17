@@ -20,13 +20,7 @@ class AppBarr extends StatelessWidget {
           bottomRight: Radius.circular(30.0),
           bottomLeft: Radius.circular(30.0),
         ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.green,
-            blurRadius: 1,
-            offset: Offset(1, 8), // changes position of shadow
-          ),
-        ],
+
       ),
       child: Column(
         children: [

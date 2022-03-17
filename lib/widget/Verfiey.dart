@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 class OtpInput extends StatelessWidget {
   final TextEditingController controller;

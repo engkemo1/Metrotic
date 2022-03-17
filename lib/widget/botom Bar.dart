@@ -6,6 +6,8 @@ class BottomBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: 100,
+      width:MediaQuery.of(context).size.width-100,
       margin: EdgeInsets.all(40),
       decoration: BoxDecoration(
         color: const Color(0xffffffff),

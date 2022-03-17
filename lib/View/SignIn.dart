@@ -17,15 +17,14 @@ class SignIn extends StatelessWidget {
           child: ListView(
             children: <Widget>[
               Container(
-                height: MediaQuery.of(context).size.height*0.4,
                 child:  BackGround(),
               ),
               SizedBox(
                 height: 40,
               ),
               Container(
-                  padding: EdgeInsets.only(left:width>1000?width*0.20:width> 400?width*0.15:30,right: width>1000?width*0.20:width> 400?width*0.15:30),
-                  margin: EdgeInsets.only(left:width>1000?width*0.20:width> 400?width*0.15:30,right: width>1000?width*0.20:width> 400?width*0.15:30),
+                  padding: EdgeInsets.only(left:width>1000?width*0.17:width> 500?width*0.12:25,right: width>1000?width*0.17:width> 500?width*0.12:25),
+                  margin: EdgeInsets.only(left:width>1000?width*0.17:width> 500?width*0.12:25,right: width>1000?width*0.17:width> 500?width*0.12:25),
 
 
                   child:
@@ -59,7 +58,7 @@ class SignIn extends StatelessWidget {
 
                 },
                 child: Container(
-                    margin: EdgeInsets.only(left:width>1000?width*0.45:width> 400?width*0.40:100,right: width>1000?width*0.45:width> 400?width*0.40:100),
+                    margin: EdgeInsets.only(left:width>1000?width*0.35:width> 500?width*0.30:70,right: width>1000?width*0.35:width> 500?width*0.30:70),
                     width: 190.0,
                     height: 55.0,
                     decoration: BoxDecoration(
