@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:metrotic/Controller/PickImage.dart';
-import 'package:metrotic/helper.dart';
 import 'package:metrotic/widget/AppBar.dart';
 import 'package:metrotic/widget/Person.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:metrotic/widget/botom%20Bar.dart';
 import 'package:provider/provider.dart';
 
@@ -17,7 +14,6 @@ class _ProfileState extends State<Profile> {
   @override
   @override
   Widget build(BuildContext context) {
-    var provider = Provider.of<GetImage>(context);
 
     var w = MediaQuery.of(context).size.width;
     var h = MediaQuery.of(context).size.height;
@@ -36,9 +32,7 @@ class _ProfileState extends State<Profile> {
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
+
                       Person(
                         high: 150,
                         width: 150,
@@ -47,106 +41,8 @@ class _ProfileState extends State<Profile> {
                         size: 140,
                         reduis: 100,
                       ),
-                      InkWell(
-                        onTap: () {
-                          showAnimatedDialog(
-                            context: context,
-                            barrierDismissible: true,
-                            builder: (BuildContext context) {
-                              return Align(
-                                alignment: Alignment.bottomCenter,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      color: ColorsHelp.background,
-                                      borderRadius: BorderRadius.circular(20)),
-                                  height: 120,
-                                  width: MediaQuery.of(context).size.width,
-                                  child: Row(
-                                    mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                    children: [
-                                      Container(
-                                        child:  GestureDetector(
-                                          child:Column(
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            children: [
-                                              Container(
-                                                height: 45,
-                                                width: 45,
-                                                decoration: BoxDecoration(
-                                                    color: Colors.white,
-                                                    borderRadius: BorderRadius.circular(30)),
-                                                child: Icon(
-                                                  Icons.camera_alt,
-                                                  color: const Color(0xff00334a),
-                                                  size: 35,
-                                                ),
-                                              ),
-                                              Text(
 
-                                                "Camera",
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
 
-                                                    fontSize: 15,
-                                                    color: Colors.white,
-                                                    decoration: TextDecoration.none),
-                                              ),],
-                                          ),
-                                          onTap: () {
-                                            provider.getImage(ImageSource.camera);
-                                          },
-                                        ),),
-                                      Container(
-                                        child:  GestureDetector(
-                                          child:Column(
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            children: [
-                                              Container(
-                                                height: 45,
-                                                width: 45,
-                                                decoration: BoxDecoration(
-                                                    color: Colors.white,
-                                                    borderRadius: BorderRadius.circular(30)),
-                                                child: Icon(
-                                                  Icons.photo,
-                                                  color: const Color(0xff00334a),
-                                                  size: 35,
-                                                ),
-                                              ),
-                                              Text(
-
-                                                "Gallery",
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 15,
-                                                    color: Colors.white,
-                                                    decoration: TextDecoration.none),
-                                              ),],
-                                          ),
-                                          onTap: () {
-                                            provider.getImage(ImageSource.gallery);
-                                          },
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
-                            animationType: DialogTransitionType.size,
-                            curve: Curves.fastOutSlowIn,
-                            duration: Duration(seconds: 1),
-                          );
-                        },
-                        child: Image.asset(
-                          "assets/edit.png",
-                          height: 30,
-                          width: 30,
-                        ),
-                      )
-                    ],
-                  )
                 ],
               ),
               SizedBox(

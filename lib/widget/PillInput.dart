@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class TextInput extends StatelessWidget {
- final String name;
- final String hint;
+  final String name;
+  final String hint;
 
   const TextInput({required this.name, required this.hint}) ;
   @override

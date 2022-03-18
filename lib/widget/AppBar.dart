@@ -36,10 +36,10 @@ class AppBarr extends StatelessWidget {
                 icon: Icon(
                   Icons.arrow_back_ios,
                   color: Colors.green,
-                  size: 40,
+                  size: 30,
                 ),
               ),
-              Text(text,style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white,fontSize: 25),),
+              Text(text,style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white,fontSize: 20),),
               Row(
                 children: [
                   InkWell(
@@ -64,8 +64,8 @@ class AppBarr extends StatelessWidget {
                       },
                       child: Image.asset(
                         "assets/menu.png",
-                        width: 40,
-                        height: 40,
+                        width: 30,
+                        height: 30,
                       ),
                     ),
                   ),
