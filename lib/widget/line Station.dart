@@ -40,7 +40,6 @@ class LineStation extends StatelessWidget {
     return ListView(
       children: [
         Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-
           Align(
             alignment: Alignment.topCenter,
             child: Text(
@@ -58,8 +57,8 @@ class LineStation extends StatelessWidget {
           Row(
             children: [
               Container(
-                height: 15,
-                width: 15,
+                height: 10,
+                width: 10,
                 decoration: BoxDecoration(
                     color: ColorsHelp.background,
                     borderRadius: BorderRadius.circular(20)),
@@ -71,8 +70,9 @@ class LineStation extends StatelessWidget {
                 Text1,
                 style: TextStyle(
                     color: ColorsHelp.background,
-                    fontSize: 15,
-                    fontWeight: FontWeight.normal,                    decoration: TextDecoration.none),
+                    fontSize: 10,
+                    fontWeight: FontWeight.normal,
+                    decoration: TextDecoration.none),
               )
             ],
           ),
@@ -80,8 +80,8 @@ class LineStation extends StatelessWidget {
           Row(
             children: [
               Container(
-                height: 15,
-                width: 15,
+                height: 10,
+                width: 10,
                 decoration: BoxDecoration(
                     color: ColorsHelp.background,
                     borderRadius: BorderRadius.circular(20)),
@@ -94,7 +94,7 @@ class LineStation extends StatelessWidget {
                 style: TextStyle(
                     fontWeight: FontWeight.normal,
                     color: ColorsHelp.background,
-                    fontSize: 15,
+                    fontSize: 10,
                     decoration: TextDecoration.none),
               )
             ],
@@ -103,8 +103,8 @@ class LineStation extends StatelessWidget {
           Row(
             children: [
               Container(
-                height: 15,
-                width: 15,
+                height: 10,
+                width: 10,
                 decoration: BoxDecoration(
                     color: ColorsHelp.background,
                     borderRadius: BorderRadius.circular(20)),
@@ -116,7 +116,7 @@ class LineStation extends StatelessWidget {
                 Text3,
                 style: TextStyle(
                     fontWeight: FontWeight.normal,
-                    fontSize: 15,
+                    fontSize: 10,
                     color: ColorsHelp.background,
                     decoration: TextDecoration.none),
               )
@@ -126,8 +126,8 @@ class LineStation extends StatelessWidget {
           Row(
             children: [
               Container(
-                height: 15,
-                width: 15,
+                height: 10,
+                width: 10,
                 decoration: BoxDecoration(
                     color: ColorsHelp.background,
                     borderRadius: BorderRadius.circular(20)),
@@ -139,7 +139,7 @@ class LineStation extends StatelessWidget {
                 Text4,
                 style: TextStyle(
                     fontWeight: FontWeight.normal,
-                    fontSize: 15,
+                    fontSize: 10,
                     color: ColorsHelp.background,
                     decoration: TextDecoration.none),
               )
@@ -149,8 +149,8 @@ class LineStation extends StatelessWidget {
           Row(
             children: [
               Container(
-                height: 15,
-                width: 15,
+                height: 10,
+                width: 10,
                 decoration: BoxDecoration(
                     color: ColorsHelp.background,
                     borderRadius: BorderRadius.circular(20)),
@@ -162,7 +162,7 @@ class LineStation extends StatelessWidget {
                 Text5,
                 style: TextStyle(
                     fontWeight: FontWeight.normal,
-                    fontSize: 15,
+                    fontSize: 10,
                     color: ColorsHelp.background,
                     decoration: TextDecoration.none),
               )
@@ -172,8 +172,8 @@ class LineStation extends StatelessWidget {
           Row(
             children: [
               Container(
-                height: 15,
-                width: 15,
+                height: 10,
+                width: 10,
                 decoration: BoxDecoration(
                     color: ColorsHelp.background,
                     borderRadius: BorderRadius.circular(20)),
@@ -185,7 +185,7 @@ class LineStation extends StatelessWidget {
                 Text6,
                 style: TextStyle(
                     fontWeight: FontWeight.normal,
-                    fontSize: 15,
+                    fontSize: 10,
                     color: ColorsHelp.background,
                     decoration: TextDecoration.none),
               )
@@ -195,8 +195,8 @@ class LineStation extends StatelessWidget {
           Row(
             children: [
               Container(
-                height: 15,
-                width: 15,
+                height: 10,
+                width: 10,
                 decoration: BoxDecoration(
                     color: ColorsHelp.background,
                     borderRadius: BorderRadius.circular(20)),
@@ -208,8 +208,7 @@ class LineStation extends StatelessWidget {
                 Text7,
                 style: TextStyle(
                     fontWeight: FontWeight.normal,
-
-                    fontSize: 15,
+                    fontSize: 10,
                     color: ColorsHelp.background,
                     decoration: TextDecoration.none),
               )
@@ -219,8 +218,8 @@ class LineStation extends StatelessWidget {
           Row(
             children: [
               Container(
-                height: 15,
-                width: 15,
+                height: 10,
+                width: 10,
                 decoration: BoxDecoration(
                     color: ColorsHelp.background,
                     borderRadius: BorderRadius.circular(20)),
@@ -232,8 +231,7 @@ class LineStation extends StatelessWidget {
                 Text8,
                 style: TextStyle(
                     fontWeight: FontWeight.normal,
-
-                    fontSize: 15,
+                    fontSize: 10,
                     color: ColorsHelp.background,
                     decoration: TextDecoration.none),
               )
@@ -243,8 +241,8 @@ class LineStation extends StatelessWidget {
           Row(
             children: [
               Container(
-                height: 15,
-                width: 15,
+                height: 10,
+                width: 10,
                 decoration: BoxDecoration(
                     color: ColorsHelp.background,
                     borderRadius: BorderRadius.circular(20)),
@@ -256,8 +254,7 @@ class LineStation extends StatelessWidget {
                 Text9,
                 style: TextStyle(
                     fontWeight: FontWeight.normal,
-
-                    fontSize: 15,
+                    fontSize: 10,
                     color: ColorsHelp.background,
                     decoration: TextDecoration.none),
               )
@@ -267,8 +264,8 @@ class LineStation extends StatelessWidget {
           Row(
             children: [
               Container(
-                height: 15,
-                width: 15,
+                height: 10,
+                width: 10,
                 decoration: BoxDecoration(
                     color: ColorsHelp.background,
                     borderRadius: BorderRadius.circular(20)),
@@ -280,8 +277,7 @@ class LineStation extends StatelessWidget {
                 Text10,
                 style: TextStyle(
                     fontWeight: FontWeight.normal,
-
-                    fontSize: 15,
+                    fontSize: 10,
                     color: ColorsHelp.background,
                     decoration: TextDecoration.none),
               )
@@ -291,8 +287,8 @@ class LineStation extends StatelessWidget {
           Row(
             children: [
               Container(
-                height: 15,
-                width: 15,
+                height: 10,
+                width: 10,
                 decoration: BoxDecoration(
                     color: ColorsHelp.background,
                     borderRadius: BorderRadius.circular(20)),
@@ -304,8 +300,7 @@ class LineStation extends StatelessWidget {
                 Text11,
                 style: TextStyle(
                     fontWeight: FontWeight.normal,
-
-                    fontSize: 15,
+                    fontSize: 10,
                     color: ColorsHelp.background,
                     decoration: TextDecoration.none),
               )
@@ -315,8 +310,8 @@ class LineStation extends StatelessWidget {
           Row(
             children: [
               Container(
-                height: 15,
-                width: 15,
+                height: 10,
+                width: 10,
                 decoration: BoxDecoration(
                     color: ColorsHelp.background,
                     borderRadius: BorderRadius.circular(20)),
@@ -328,8 +323,7 @@ class LineStation extends StatelessWidget {
                 Text12,
                 style: TextStyle(
                     fontWeight: FontWeight.normal,
-
-                    fontSize: 15,
+                    fontSize: 10,
                     color: ColorsHelp.background,
                     decoration: TextDecoration.none),
               )
@@ -339,8 +333,8 @@ class LineStation extends StatelessWidget {
           Row(
             children: [
               Container(
-                height: 15,
-                width: 15,
+                height: 10,
+                width: 10,
                 decoration: BoxDecoration(
                     color: ColorsHelp.background,
                     borderRadius: BorderRadius.circular(20)),
@@ -352,8 +346,7 @@ class LineStation extends StatelessWidget {
                 Text13,
                 style: TextStyle(
                     fontWeight: FontWeight.normal,
-
-                    fontSize: 15,
+                    fontSize: 10,
                     color: ColorsHelp.background,
                     decoration: TextDecoration.none),
               )

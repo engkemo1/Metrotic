@@ -1,55 +1,131 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-class BottomBar extends StatelessWidget {
-  const BottomBar({Key? key}) : super(key: key);
+import 'package:jumping_bottom_nav_bar/jumping_bottom_nav_bar.dart';
+import 'package:metrotic/View/HomScreen.dart';
+
+import '../View/Profile2.dart';
+import '../helper.dart';
+
+class BotoomBar extends StatelessWidget {
+  final int index;
+
+  const BotoomBar({required this.index});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 100,
-      width:MediaQuery.of(context).size.width-100,
-      margin: EdgeInsets.all(40),
-      decoration: BoxDecoration(
-        color: const Color(0xffffffff),
-        borderRadius: BorderRadius.circular(29.0),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0x29000000),
-            offset: Offset(0, 3),
-            blurRadius: 6,
-          ),
-
-        ],
+    return JumpingTabBar(
+      duration:Duration(seconds: 1) ,
+      backgroundColor: Colors.white,
+      circleGradient: LinearGradient(
+        colors: [Colors.white, Colors.white],
+        begin: Alignment.bottomLeft,
+        end: Alignment.topRight,
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-
-        GestureDetector(
-          onTap: (){},
-          child: Image.asset("assets/money.png"),
-
+      items: [
+        TabItemIcon(
+          buildWidget: (_, color) => GestureDetector(
+            child: Container(
+              height: 50,width: 50,
+              child: Icon(
+                Icons.attach_money,
+                color: ColorsHelp.background,
+                size: 35,
+              ),
+            ),
+            onTap: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (_) => Profile()));
+            },
+          ),
+          endColor: Colors.green,
+          startColor: Colors.red,
+          curveColor: ColorsHelp.background,
         ),
+        TabItemIcon(
+            buildWidget: (_, color) => GestureDetector(
 
-        GestureDetector(onTap: (){
-        },
-          child: Image.asset("assets/location.png"),
+                  onTap: () {
+                    Navigator.push(
+                        context, MaterialPageRoute(builder: (_) => Home()));
+                  },
+                  child: Container(
+                    height: 50,width: 50,
+
+                    child: Image.asset("assets/location.png"),
+                  ),
+                ),
+            curveColor: ColorsHelp.background),
+        TabItemIcon(
+          curveColor: ColorsHelp.background,
+          startColor: ColorsHelp.background,
+          buildWidget: (_, color) => IconButton(
+            onPressed: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (_) => Profile()));
+            },
+            icon: Icon(
+              Icons.person,
+              size: 35,
+              color: ColorsHelp.background,
+            ),
+          ),
         ),
-
-
-        GestureDetector(onTap: (){},
-          child: Image.asset("assets/user.png"),
-
-        ),
-
-
-        GestureDetector(onTap: (){},
-          child: Image.asset("assets/Notifiation.png"),
-        ),
-        GestureDetector(onTap: (){},child: Image.asset("assets/setting.png"),),
-
-
-      ],),
+        TabItemIcon(
+            buildWidget: (_, color) => GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                        context, MaterialPageRoute(builder: (_) => Profile()));
+                  },
+                  child: Container(
+                 child: Stack(
+                    children: <Widget>[
+                      new Icon(
+                        Icons.notifications,
+                        size: 35,
+                        color: ColorsHelp.background,
+                      ),
+                      new Positioned(
+                        top: 1.0,
+                        right: 0.0,
+                        child: new Stack(
+                          children: <Widget>[
+                            new Icon(
+                              Icons.brightness_1,
+                              size: 18.0,
+                              color: Colors.green,
+                            ),
+                            new Positioned(
+                              top: 0.0,
+                              right: 4.0,
+                              child: new Text("2",
+                                  style: new TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                  )),
+                            )
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                  )
+                )),
+        TabItemIcon(
+            buildWidget: (_, color) => GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                        context, MaterialPageRoute(builder: (_) => Profile()));
+                  },
+                  child: Container(
+                      height: 50,width: 50,
+                      child: Icon(
+                    Icons.settings,
+                    color: ColorsHelp.background,
+                    size: 35,
+                  ))
+                )),
+      ],
+      selectedIndex: index,
     );
   }
 }

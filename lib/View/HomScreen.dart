@@ -1,15 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
+import 'package:jumping_bottom_nav_bar/jumping_bottom_nav_bar.dart';
 import 'package:metrotic/View/Profile2.dart';
 import 'package:metrotic/helper.dart';
 import 'package:metrotic/widget/AppBar.dart';
 import 'package:metrotic/widget/Person.dart';
+import 'package:metrotic/widget/botom%20Bar.dart';
 import 'package:metrotic/widget/line%20Station.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
-import '../widget/Line.dart';
 import 'menu.dart';
 
 class Home extends StatefulWidget {
@@ -33,6 +33,9 @@ class _HomeState extends State<Home> {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
     return Scaffold(
+        bottomNavigationBar: BotoomBar(
+          index: 2,
+        ),
         backgroundColor: const Color(0xffffffff),
         body: SafeArea(
             child: Stack(children: <Widget>[
@@ -51,7 +54,7 @@ class _HomeState extends State<Home> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Padding(
-                      padding: EdgeInsets.only(right: 10),
+                      padding: EdgeInsets.only(right: 10, top: 10),
                       child: InkWell(
                         onTap: () {
                           Navigator.push(context,
@@ -59,15 +62,12 @@ class _HomeState extends State<Home> {
                         },
                         child: Image.asset(
                           "assets/menu.png",
-                          width: 40,
-                          height: 40,
+                          width: 30,
+                          height: 30,
                         ),
                       ),
                     ),
                   ],
-                ),
-                SizedBox(
-                  height: 20,
                 ),
                 InkWell(
                   onTap: () {
@@ -75,8 +75,8 @@ class _HomeState extends State<Home> {
                         context, MaterialPageRoute(builder: (_) => Profile()));
                   },
                   child: Person(
-                      high: 150,
-                      width: 150,
+                      high: 120,
+                      width: 120,
                       color: Colors.white,
                       color2: ColorsHelp.background,
                       size: 120,
@@ -89,7 +89,7 @@ class _HomeState extends State<Home> {
                   'Kamal Magdy ',
                   style: TextStyle(
                     fontFamily: 'Montserrat',
-                    fontSize: 30,
+                    fontSize: 25,
                     color: const Color(0xffffffff),
                     fontWeight: FontWeight.w700,
                     height: 1.608695652173913,
@@ -102,7 +102,7 @@ class _HomeState extends State<Home> {
                   'Daily ticket',
                   style: TextStyle(
                     fontFamily: 'Montserrat',
-                    fontSize: 19,
+                    fontSize: 15,
                     color: Colors.green,
                     height: 1.608695652173913,
                   ),
@@ -111,13 +111,13 @@ class _HomeState extends State<Home> {
                   softWrap: false,
                 ),
                 SizedBox(
-                  height: 25,
+                  height: 20,
                 ),
                 Text(
                   'Good Morning kamal :)',
                   style: TextStyle(
                     fontFamily: 'Montserrat',
-                    fontSize: 15,
+                    fontSize: 12,
                     color: Colors.green,
                     height: 1.608695652173913,
                   ),
@@ -129,7 +129,7 @@ class _HomeState extends State<Home> {
                   "Where Do You Want \n To Go Today ?",
                   style: TextStyle(
                     fontFamily: 'Montserrat',
-                    fontSize: 23,
+                    fontSize: 20,
                     color: const Color(0xffffffff),
                     fontWeight: FontWeight.w700,
                     height: 1.608695652173913,
@@ -141,9 +141,6 @@ class _HomeState extends State<Home> {
                 ),
               ],
             ),
-          ),
-          SizedBox(
-            height: 50,
           ),
           SlidingUpPanel(
             controller: _pc,
@@ -285,8 +282,7 @@ class _HomeState extends State<Home> {
                                             decoration: BoxDecoration(
                                                 color: Colors.white,
                                                 borderRadius:
-                                                BorderRadius.circular(
-                                                    20),
+                                                    BorderRadius.circular(20),
                                                 boxShadow: [
                                                   BoxShadow(
                                                       offset: Offset(1, 4),
@@ -297,13 +293,13 @@ class _HomeState extends State<Home> {
                                             width: 300,
                                             child: Column(
                                                 mainAxisAlignment:
-                                                MainAxisAlignment
-                                                    .spaceAround,
+                                                    MainAxisAlignment
+                                                        .spaceAround,
                                                 children: [
                                                   Row(
                                                     mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceAround,
+                                                        MainAxisAlignment
+                                                            .spaceAround,
                                                     children: [
                                                       Container(
                                                         height: 35,
@@ -312,78 +308,92 @@ class _HomeState extends State<Home> {
                                                             color: ColorsHelp
                                                                 .background,
                                                             borderRadius:
-                                                            BorderRadius
-                                                                .circular(
-                                                                20)),
-                                                        child:
-                                                        GestureDetector(
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        20)),
+                                                        child: GestureDetector(
                                                           child: Center(
                                                             child: Text(
                                                               "First Line",
                                                               style: TextStyle(
                                                                   fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                                  fontSize:
-                                                                  10,
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  fontSize: 10,
                                                                   color: Colors
                                                                       .white,
                                                                   decoration:
-                                                                  TextDecoration
-                                                                      .none),
+                                                                      TextDecoration
+                                                                          .none),
                                                             ),
                                                           ),
                                                           onTap: () {
                                                             Navigator.pop(
                                                                 context);
                                                             showAnimatedDialog(
-                                                              context:
-                                                              context,
+                                                              context: context,
                                                               barrierDismissible:
-                                                              true,
+                                                                  true,
                                                               builder:
                                                                   (BuildContext
-                                                              context) {
+                                                                      context) {
                                                                 return Align(
                                                                     alignment:
-                                                                    Alignment(0,0.4)
-                                                                    ,
+                                                                        Alignment(
+                                                                            0,
+                                                                            0.4),
                                                                     child:
-                                                                    Container(
-                                                                      padding:
-                                                                      EdgeInsets.only(left: 20),
+                                                                        Container(
+                                                                      padding: EdgeInsets.only(
+                                                                          left:
+                                                                              20),
                                                                       decoration: BoxDecoration(
-                                                                          color: Colors.white,
-                                                                          borderRadius: BorderRadius.circular(20)),
+                                                                          color: Colors
+                                                                              .white,
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(20)),
                                                                       width:
-                                                                      300,
+                                                                          300,
                                                                       height:
-                                                                      400,
+                                                                          400,
                                                                       child: LineStation(
-                                                                          Text1: "Helwan",
-                                                                          Text2: "Ain Helwan",
-                                                                          Text3: "Helwan University",
-                                                                          Text4: "Wadi Hof",
-                                                                          Text5: "Hadayek Helwan",
-                                                                          Text6: "El_Maasara",
-                                                                          Text7: "Tora El_Asmant",
-                                                                          Text8: "Kozzika",
-                                                                          Text9: "Tora El_Balad",
-                                                                          Text10: "Sakanat El_maadi",
-                                                                          Text11: "Maddi",
-                                                                          Text12: "Hadayek El_Maadi",
-                                                                          Text13: "Dar El_Salam"),
+                                                                          Text1:
+                                                                              "Helwan",
+                                                                          Text2:
+                                                                              "Ain Helwan",
+                                                                          Text3:
+                                                                              "Helwan University",
+                                                                          Text4:
+                                                                              "Wadi Hof",
+                                                                          Text5:
+                                                                              "Hadayek Helwan",
+                                                                          Text6:
+                                                                              "El_Maasara",
+                                                                          Text7:
+                                                                              "Tora El_Asmant",
+                                                                          Text8:
+                                                                              "Kozzika",
+                                                                          Text9:
+                                                                              "Tora El_Balad",
+                                                                          Text10:
+                                                                              "Sakanat El_maadi",
+                                                                          Text11:
+                                                                              "Maddi",
+                                                                          Text12:
+                                                                              "Hadayek El_Maadi",
+                                                                          Text13:
+                                                                              "Dar El_Salam"),
                                                                     ));
                                                               },
                                                               animationType:
-                                                              DialogTransitionType
-                                                                  .slideFromBottomFade,
+                                                                  DialogTransitionType
+                                                                      .slideFromBottomFade,
                                                               curve: Curves
                                                                   .fastOutSlowIn,
                                                               duration:
-                                                              Duration(
-                                                                  seconds:
-                                                                  2),
+                                                                  Duration(
+                                                                      seconds:
+                                                                          2),
                                                             );
                                                           },
                                                         ),
@@ -395,26 +405,24 @@ class _HomeState extends State<Home> {
                                                             color: ColorsHelp
                                                                 .background,
                                                             borderRadius:
-                                                            BorderRadius
-                                                                .circular(
-                                                                20)),
-                                                        child:
-                                                        GestureDetector(
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        20)),
+                                                        child: GestureDetector(
                                                           child: Center(
                                                               child: Text(
-                                                                "Second Line",
-                                                                style: TextStyle(
-                                                                    fontWeight:
+                                                            "Second Line",
+                                                            style: TextStyle(
+                                                                fontWeight:
                                                                     FontWeight
                                                                         .bold,
-                                                                    fontSize:
-                                                                    10,
-                                                                    color: Colors
-                                                                        .white,
-                                                                    decoration:
+                                                                fontSize: 10,
+                                                                color: Colors
+                                                                    .white,
+                                                                decoration:
                                                                     TextDecoration
                                                                         .none),
-                                                              )),
+                                                          )),
                                                           onTap: () {},
                                                         ),
                                                       ),
@@ -422,8 +430,8 @@ class _HomeState extends State<Home> {
                                                   ),
                                                   Row(
                                                     mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceAround,
+                                                        MainAxisAlignment
+                                                            .spaceAround,
                                                     children: [
                                                       Container(
                                                         height: 35,
@@ -432,25 +440,23 @@ class _HomeState extends State<Home> {
                                                             color: ColorsHelp
                                                                 .background,
                                                             borderRadius:
-                                                            BorderRadius
-                                                                .circular(
-                                                                20)),
-                                                        child:
-                                                        GestureDetector(
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        20)),
+                                                        child: GestureDetector(
                                                           child: Center(
                                                             child: Text(
                                                               "Third Line",
                                                               style: TextStyle(
                                                                   fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                                  fontSize:
-                                                                  10,
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  fontSize: 10,
                                                                   color: Colors
                                                                       .white,
                                                                   decoration:
-                                                                  TextDecoration
-                                                                      .none),
+                                                                      TextDecoration
+                                                                          .none),
                                                             ),
                                                           ),
                                                           onTap: () {},
@@ -465,8 +471,7 @@ class _HomeState extends State<Home> {
                                                 ])),
                                       );
                                     },
-                                    animationType:
-                                    DialogTransitionType.size,
+                                    animationType: DialogTransitionType.size,
                                     curve: Curves.fastOutSlowIn,
                                     duration: Duration(seconds: 1),
                                   );
@@ -573,9 +578,9 @@ class _HomeState extends State<Home> {
                                                                       (BuildContext
                                                                           context) {
                                                                     return Align(
-                                                                        alignment:
-                                                                            Alignment(0,0.4)
-                                                                                ,
+                                                                        alignment: Alignment(
+                                                                            0,
+                                                                            0.4),
                                                                         child:
                                                                             Container(
                                                                           padding:
