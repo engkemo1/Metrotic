@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
-import 'package:jumping_bottom_nav_bar/jumping_bottom_nav_bar.dart';
 import 'package:metrotic/View/Profile2.dart';
 import 'package:metrotic/helper.dart';
 import 'package:metrotic/widget/AppBar.dart';

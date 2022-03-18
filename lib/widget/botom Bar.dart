@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:jumping_bottom_nav_bar/jumping_bottom_nav_bar.dart';
+import 'package:metrotic/View/Current%20balance.dart';
 import 'package:metrotic/View/HomScreen.dart';
-
+import 'package:metrotic/View/Notification.dart';
+import 'package:metrotic/View/Setting.dart';
 import '../View/Profile2.dart';
 import '../helper.dart';
 
@@ -13,7 +15,7 @@ class BotoomBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return JumpingTabBar(
-      duration:Duration(seconds: 1) ,
+      duration:Duration(seconds: 3) ,
       backgroundColor: Colors.white,
       circleGradient: LinearGradient(
         colors: [Colors.white, Colors.white],
@@ -33,7 +35,7 @@ class BotoomBar extends StatelessWidget {
             ),
             onTap: () {
               Navigator.push(
-                  context, MaterialPageRoute(builder: (_) => Profile()));
+                  context, MaterialPageRoute(builder: (_) => CurrentBalance()));
             },
           ),
           endColor: Colors.green,
@@ -73,7 +75,7 @@ class BotoomBar extends StatelessWidget {
             buildWidget: (_, color) => GestureDetector(
                   onTap: () {
                     Navigator.push(
-                        context, MaterialPageRoute(builder: (_) => Profile()));
+                        context, MaterialPageRoute(builder: (_) => Notif()));
                   },
                   child: Container(
                  child: Stack(
@@ -114,7 +116,7 @@ class BotoomBar extends StatelessWidget {
             buildWidget: (_, color) => GestureDetector(
                   onTap: () {
                     Navigator.push(
-                        context, MaterialPageRoute(builder: (_) => Profile()));
+                        context, MaterialPageRoute(builder: (_) => Setting()));
                   },
                   child: Container(
                       height: 50,width: 50,

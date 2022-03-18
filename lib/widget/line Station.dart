@@ -35,8 +35,12 @@ class LineStation extends StatelessWidget {
       required this.Text13})
       : super(key: key);
 
+
   @override
   Widget build(BuildContext context) {
+int? index1;
+int? index2;
+
     return ListView(
       children: [
         Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -66,14 +70,14 @@ class LineStation extends StatelessWidget {
               SizedBox(
                 width: 15,
               ),
-              Text(
+              GestureDetector(child: Text(
                 Text1,
                 style: TextStyle(
                     color: ColorsHelp.background,
                     fontSize: 10,
                     fontWeight: FontWeight.normal,
                     decoration: TextDecoration.none),
-              )
+              ),onTap: (){},)
             ],
           ),
           Line(),
@@ -89,14 +93,23 @@ class LineStation extends StatelessWidget {
               SizedBox(
                 width: 10,
               ),
-              Text(
+            GestureDetector(
+              child:   Text(
                 Text2,
                 style: TextStyle(
                     fontWeight: FontWeight.normal,
                     color: ColorsHelp.background,
                     fontSize: 10,
                     decoration: TextDecoration.none),
-              )
+              ),
+              onTap: (){
+                if(index1 != null){
+index2=1;
+                }
+                index1=1;
+
+              },
+            )
             ],
           ),
           Line(),
