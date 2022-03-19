@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:metrotic/View/About.dart';
 import 'package:metrotic/View/supsciptions/Subscription%20Details.dart';
 import 'package:metrotic/widget/Map%20Metro.dart';
 import 'package:metrotic/widget/Person.dart';
@@ -268,7 +269,8 @@ class Menu extends StatelessWidget {
                   height: 15,
                 ),
                 GestureDetector(
-                  onTap: () {},
+                  onTap: () {                   Navigator.push(context,MaterialPageRoute(builder: (_) => About()));
+                  },
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

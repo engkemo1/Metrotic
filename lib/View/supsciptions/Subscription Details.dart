@@ -1,10 +1,11 @@
 
 
 import 'package:flutter/material.dart';
-import 'package:metrotic/View/supsciptions/SupDetails2.dart';
+import 'package:metrotic/View/supsciptions/Plans.dart';
+
+import 'package:metrotic/View/supsciptions/TicketPrice.dart';
 import 'package:metrotic/widget/AppBar.dart';
 import 'package:metrotic/widget/botom%20Bar.dart';
-import 'dart:ui' as ui;
 
 import '../../helper.dart';
 
@@ -15,52 +16,22 @@ class SupscripDetails1 extends StatefulWidget {
   _SupscripDetails1State createState() => _SupscripDetails1State();
 }
 
-class _SupscripDetails1State extends State<SupscripDetails1>with SingleTickerProviderStateMixin {
-  AnimationController? _controller;
-  Animation<double>? _animation;
-  bool upDown = true;
+class _SupscripDetails1State extends State<SupscripDetails1> {
 
-  @override
-  void initState() {
-    _controller = new AnimationController(
-      duration: const Duration(seconds: 5),
-
-      vsync: this,
-    );
-
-    _animation = new CurvedAnimation(
-      parent: _controller!,
-      curve: new Interval(0.0, 1.0, curve: Curves.linear),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
-    final ui.Size logicalSize = MediaQuery.of(context).size;
-    final double _width = logicalSize.width;
-    final double _height = logicalSize.height;
 
-    void _up(){
-      setState((){
-        if(upDown) {
-          upDown = false;
-          _controller?.forward(from: 0.0);
-        } else {
-          upDown = true;
-          _controller?.reverse(from: 1.0);
-        }
-      });
-    }
     return Scaffold(bottomNavigationBar: BotoomBar(index: 1,),body: SafeArea(child:Column(
       children: [
         AppBarr(text: ("Subscription \nDetails")),
         SizedBox(
-          height: _height*0.10,
+          height:80,
         ),
-        AnimatedBuilder(animation: _animation!, builder: ( context,  child){
-          return GestureDetector(
+
+           GestureDetector(
             onTap:(){ Navigator.push(context,
-                MaterialPageRoute(builder: (_) => SupDet1()));} ,child:  Container(
+                MaterialPageRoute(builder: (_) => TicketPrice()));} ,child:  Container(
             height: 150,
             width: 300,
             decoration: BoxDecoration(
@@ -93,19 +64,17 @@ class _SupscripDetails1State extends State<SupscripDetails1>with SingleTickerPro
             ],),
 
           ),
-          );
-        }
+          ),
 
-        
-
-        ),
         SizedBox(height: 40,),
         Divider(color: ColorsHelp.background,thickness: 2,),
         SizedBox(height: 40,),
 
-        AnimatedBuilder(animation: _animation!, builder: ( context,  child){
-          return GestureDetector(
-            onTap:(){} ,child:  Container(
+           GestureDetector(
+            onTap:(){
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (_) => Plans()));
+            } ,child:  Container(
             height: 150,
             width: 300,
             decoration: BoxDecoration(
@@ -139,12 +108,8 @@ Image.asset("assets/cash.png",height: 50,width: 50,),
             ],),
 
           ),
-          );
-        }
+          )
 
-
-
-        ),
 
       ],
     ) ));
