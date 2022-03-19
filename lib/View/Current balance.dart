@@ -23,7 +23,8 @@ class _CurrentBalanceState extends State<CurrentBalance> {
            Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              AppBarr(text: "Current Balance"),
+                         AppBarr(text: "Current Balance"),
+
               SizedBox(
                 height: 50,
               ),
@@ -163,6 +164,7 @@ Container(
                     applyHeightToFirstAscent: false),
                 softWrap: false,
               ),
+              SizedBox(height: 20,),
               Container(
                 padding: EdgeInsets.only(left: 10),
                 height: 80,width: 300,
