@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:metrotic/Controller/PickImage.dart';
 import 'package:metrotic/widget/AppBar.dart';
 import 'package:metrotic/widget/Person.dart';
 import 'package:metrotic/widget/botom%20Bar.dart';
-import 'package:provider/provider.dart';
 
 class Profile extends StatefulWidget {
+  
   @override
   _ProfileState createState() => _ProfileState();
 }
 
 class _ProfileState extends State<Profile> {
-  @override
+  double loginWidth = 40.0;
+@override
+  void initState() {
+    // TODO: implement initState
+loginWidth=300;  }
   @override
   Widget build(BuildContext context) {
 
@@ -50,14 +53,17 @@ class _ProfileState extends State<Profile> {
               ),
               Padding(
                 padding: EdgeInsets.only(left: 20, right: 20),
-                child: Container(
+                child: AnimatedContainer(
                   padding: EdgeInsets.only(left: 20, right: 20, top: 5),
-                  height: 300,
+                  height: loginWidth,
                   width: w,
+
                   decoration: BoxDecoration(
                     color: const Color(0xff00334a),
                     borderRadius: BorderRadius.circular(20),
                   ),
+duration: Duration(seconds: 5),
+                  curve: Curves.bounceInOut,
                   child: Column(
                     children: [
                       GestureDetector(

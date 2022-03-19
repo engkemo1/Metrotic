@@ -347,8 +347,8 @@ class _HomeState extends State<Home> {
                                                                           left:
                                                                               20),
                                                                       decoration: BoxDecoration(
-                                                                          color: Colors
-                                                                              .white,
+                                                                          color: Colors.white.withOpacity(0.1),
+
                                                                           borderRadius:
                                                                               BorderRadius.circular(20)),
                                                                       width:
@@ -585,7 +585,8 @@ class _HomeState extends State<Home> {
                                                                           padding:
                                                                               EdgeInsets.only(left: 20),
                                                                           decoration: BoxDecoration(
-                                                                              color: Colors.white,
+                                                                              color: Colors.white.withOpacity(0.1)
+                                                                              ,
                                                                               borderRadius: BorderRadius.circular(20)),
                                                                           width:
                                                                               300,
