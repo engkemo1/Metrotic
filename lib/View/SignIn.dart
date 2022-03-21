@@ -1,3 +1,4 @@
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:metrotic/widget/BackGround.dart';
@@ -5,7 +6,12 @@ import 'package:metrotic/widget/PillInput.dart';
 
 import 'HomScreen.dart';
 
-class SignIn extends StatelessWidget {
+class SignIn extends StatefulWidget {
+  @override
+  State<SignIn> createState() => _SignInState();
+}
+
+class _SignInState extends State<SignIn> {
   @override
   Widget build(BuildContext context) {
     var height =MediaQuery.of(context).size.height;
@@ -17,38 +23,33 @@ class SignIn extends StatelessWidget {
           child: ListView(
             children: <Widget>[
               Container(
+                height: MediaQuery.of(context).size.height*0.4,
                 child:  BackGround(),
               ),
               SizedBox(
                 height: 40,
               ),
               Container(
-                  padding: EdgeInsets.only(left:width>1000?width*0.17:width> 500?width*0.12:25,right: width>1000?width*0.17:width> 500?width*0.12:25),
-                  margin: EdgeInsets.only(left:width>1000?width*0.17:width> 500?width*0.12:25,right: width>1000?width*0.17:width> 500?width*0.12:25),
-
-
-                  child:
-                  Column(
-                    children: [
-                      TextInput(
-                        name: "Phone Number",
-                        hint: "Enter Your Number",
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      TextInput(
-                        name: "Password",
-                        hint: "Enter Your Password",
-                      ),
-                    ],
-                  )
-
-
-
+                width: double.infinity,
+                //margin: EdgeInsets.all(8.0),
+                padding: EdgeInsets.only(left:width>1000?width*0.20:width> 400?width*0.15:30,right: width>1000?width*0.20:width> 400?width*0.15:30),
+                //margin: EdgeInsets.only(left:width>1000?width*0.20:width> 400?width*0.15:30,right: width>1000?width*0.20:width> 400?width*0.15:30),
+                child:Column(
+                  children: [
+                    TextInput(
+                      name: "Phone Number",
+                      hint: "Enter Your Number",
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    TextInput(
+                      name: "Password",
+                      hint: "Enter Your Password",
+                    ),
+                  ],
+                ),
               ),
-
-
               SizedBox(
                 height: 20,
               ),
@@ -58,7 +59,7 @@ class SignIn extends StatelessWidget {
 
                 },
                 child: Container(
-                    margin: EdgeInsets.only(left:width>1000?width*0.35:width> 500?width*0.30:70,right: width>1000?width*0.35:width> 500?width*0.30:70),
+                    margin: EdgeInsets.only(left:width>1000?width*0.45:width> 400?width*0.40:100,right: width>1000?width*0.45:width> 400?width*0.40:100),
                     width: 190.0,
                     height: 55.0,
                     decoration: BoxDecoration(

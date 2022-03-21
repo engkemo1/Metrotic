@@ -1,10 +1,15 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:metrotic/Controller/PickImage.dart';
+import 'package:metrotic/View/SignUp.dart';
 import 'package:provider/provider.dart';
 
+import 'View/SignIn.dart';
 import 'View/splash.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(
     /// Providers are above [MyApp] instead of inside it, so that tests
     /// can use [MyApp] while mocking the providers
@@ -27,7 +32,14 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: Splash(),
+      //home: Splash(),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => Splash(),
+        '/sign_in': (context) => SignIn(),
+        '/sign_up': (context) => SignUp(),
+
+      },
     );
   }
 }

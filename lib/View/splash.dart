@@ -37,8 +37,8 @@ class _SplashState extends State<Splash> {
   @override
   Widget build(BuildContext context) {
     return AnimatedSplashScreen(nextScreen: HomeSplash(),
-      splash:Image(image:AssetImage('assets/logo.png') ,) ,
-      splashTransition: SplashTransition.sizeTransition,
+        splash:Image(image:AssetImage('assets/logo.png') ,) ,
+        splashTransition: SplashTransition.sizeTransition,
         backgroundColor:const Color(0xff00334a)
       // imagePath:'assets/logo.png', home: Home(),
       // backGroundColor:const Color(0xff00334a),
