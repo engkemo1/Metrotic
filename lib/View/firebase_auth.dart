@@ -1,19 +1,27 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
+import 'package:metrotic/models/user.dart';
 
 class AuthService {
-  final FirebaseAuth _firebaseAuth;
+  final auth.FirebaseAuth _firebaseAuth;
 
   AuthService(this._firebaseAuth);
 
+  User? _userFromFirebase(auth.User user){
+    if(user == null){
+      return null;
+    }
 
-  /// Changed to idTokenChanges as it updates depending on more cases.
-  Stream<User> get authStateChanges => _firebaseAuth.idTokenChanges();
+    return User(user.uid, user.email);
+  }
+
+
+  Stream<User?> get user => _firebaseAuth.authStateChanges().map(_userFromFirebase);
 
   Future<String> signIn({required String email, required String password}) async {
     try{
       await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
       return "Signed in";
-    } on FirebaseAuthException catch(e){
+    } on auth.FirebaseAuthException catch(e){
       return e.message;
     }
   }
@@ -22,7 +30,7 @@ class AuthService {
     try{
       await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
       return "Signed in";
-    } on FirebaseAuthException catch(e){
+    } on auth.FirebaseAuthException catch(e){
       return e.message;
     }
   }

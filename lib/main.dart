@@ -1,10 +1,13 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:metrotic/Controller/PickImage.dart';
 import 'package:metrotic/View/SignUp.dart';
 import 'package:provider/provider.dart';
 
+import 'View/HomScreen.dart';
 import 'View/SignIn.dart';
+import 'View/firebase_auth.dart';
 import 'View/splash.dart';
 
 void main() async {
@@ -16,6 +19,9 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => GetImage()),
+        Provider<AuthService>(
+          create: (_) => AuthService(FirebaseAuth.instance),
+        ),
       ],
       child: MyApp(),
     ),
@@ -38,6 +44,7 @@ class MyApp extends StatelessWidget {
         '/': (context) => Splash(),
         '/sign_in': (context) => SignIn(),
         '/sign_up': (context) => SignUp(),
+        '/home_screen': (context) => Home(),
 
       },
     );

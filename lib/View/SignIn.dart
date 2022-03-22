@@ -1,17 +1,31 @@
 
+import 'dart:developer';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:metrotic/widget/BackGround.dart';
 import 'package:metrotic/widget/PillInput.dart';
+import 'package:provider/src/provider.dart';
 
 import 'HomScreen.dart';
+import 'firebase_auth.dart';
 
 class SignIn extends StatefulWidget {
+
+  static const routeName = "/sign_in";
+
   @override
   State<SignIn> createState() => _SignInState();
 }
 
 class _SignInState extends State<SignIn> {
+
+  User? user = FirebaseAuth.instance.currentUser;
+
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     var height =MediaQuery.of(context).size.height;
@@ -36,16 +50,26 @@ class _SignInState extends State<SignIn> {
                 //margin: EdgeInsets.only(left:width>1000?width*0.20:width> 400?width*0.15:30,right: width>1000?width*0.20:width> 400?width*0.15:30),
                 child:Column(
                   children: [
-                    TextInput(
-                      name: "Phone Number",
-                      hint: "Enter Your Number",
+                    TextField(
+                      controller: emailController,
+                      decoration: InputDecoration(
+                        labelText: "Email",
+                        hintText: "Enter Your Email",
+                      ),
+                      keyboardType: TextInputType.emailAddress,
+
                     ),
                     SizedBox(
                       height: 20,
                     ),
-                    TextInput(
-                      name: "Password",
-                      hint: "Enter Your Password",
+                    TextField(
+                      controller: passwordController,
+                      decoration: InputDecoration(
+                        labelText: "Password",
+                        hintText: "Enter Your Password",
+                      ),
+                      keyboardType: TextInputType.visiblePassword,
+
                     ),
                   ],
                 ),
@@ -66,20 +90,36 @@ class _SignInState extends State<SignIn> {
                       color: const Color(0xff00334a),
                       borderRadius: BorderRadius.circular(28.0),
                     ),
-                    child: Center(
-                      child: Text(
-                        'log in',
-                        style: TextStyle(
-                          fontFamily: 'Montserrat',
-                          fontSize: 13,
-                          color: const Color(0xffffffff),
-                          letterSpacing: 0.65,
-                          fontWeight: FontWeight.w700,
-                          height: 1.2307692307692308,
+                    child: GestureDetector(
+                      onTap: () {
+                        context.read<AuthService>().signIn(
+                          email: emailController.text.trim(),
+                          password: passwordController.text.trim(),
+                        );
+                        if(user != null){
+                          Navigator.of(context).pushReplacementNamed(
+                              Home.routeName);
+                        }else{
+                          log("Something wrong");
+                        }
+
+                      },
+                      child: Center(
+
+                        child: Text(
+                          'log in',
+                          style: TextStyle(
+                            fontFamily: 'Montserrat',
+                            fontSize: 13,
+                            color: const Color(0xffffffff),
+                            letterSpacing: 0.65,
+                            fontWeight: FontWeight.w700,
+                            height: 1.2307692307692308,
+                          ),
+                          textHeightBehavior:
+                          TextHeightBehavior(applyHeightToFirstAscent: false),
+                          softWrap: false,
                         ),
-                        textHeightBehavior:
-                        TextHeightBehavior(applyHeightToFirstAscent: false),
-                        softWrap: false,
                       ),
                     )),
               ),

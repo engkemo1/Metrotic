@@ -1,6 +1,8 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:metrotic/View/firebase_auth.dart';
+import 'package:provider/provider.dart';
 
 import 'SignIn.dart';
 
@@ -18,7 +20,8 @@ class _HomeSplashState extends State<HomeSplash> {
     return Scaffold(
         body:GestureDetector(
             onTap: (){
-              Navigator.push(context, MaterialPageRoute(builder: (_)=> SignIn()));
+              Navigator.of(context).pushReplacementNamed(
+                  SignIn.routeName);
             },
             child:
             Container(

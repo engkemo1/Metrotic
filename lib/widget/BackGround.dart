@@ -72,8 +72,8 @@ class BackGround extends StatelessWidget {
                       ],),),
                   GestureDetector(
                     onTap: () {
-                      Navigator.push(
-                          context, MaterialPageRoute(builder: (_) => SignUp()));
+                      Navigator.of(context).pushReplacementNamed(
+                          SignUp.routeName);
                     },
                     child: Container(
 
