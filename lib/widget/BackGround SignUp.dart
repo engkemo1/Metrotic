@@ -38,7 +38,9 @@ class BackGroundSignUp extends StatelessWidget {
             children: [
               GestureDetector(
                 onTap: (){
-                  Navigator.push(context, MaterialPageRoute(builder: (_)=>SignIn()));
+                  Navigator.of(context).pushReplacementNamed(
+                      SignIn.routeName);
+
                 },
                 child:   Container(
 
@@ -79,14 +81,14 @@ class BackGroundSignUp extends StatelessWidget {
                   ),
                 ),
 
-               Container(
-                 height: height/200,width: width*0.30,
-                 decoration: BoxDecoration(
-                     color: Colors.green,
+                Container(
+                  height: height/200,width: width*0.30,
+                  decoration: BoxDecoration(
+                      color: Colors.green,
 
-                     borderRadius: BorderRadius.circular(10)
-                 ),
-               )
+                      borderRadius: BorderRadius.circular(10)
+                  ),
+                )
               ],)
 
             ],

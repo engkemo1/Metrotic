@@ -25,7 +25,7 @@ class BackGround extends StatelessWidget {
             bottomLeft: Radius.circular(30.0),
           ),
         ),
-          child:Stack(
+        child:Stack(
           children: [
 
             Center(
@@ -34,77 +34,70 @@ class BackGround extends StatelessWidget {
 
             ),
 
-           Positioned(
+            Positioned(
+              bottom: 0,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
 
-bottom: 0,
-             child: Row(
-               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-               children: [
+                  Container(
+                    margin: EdgeInsets.only(left: 20,right: width>500?MediaQuery.of(context).size.width*0.5:width*0.3),
+                    child:     Column(
+                      children: [
+                        Container(
+                          child: Text(
+                            'Log In',
+                            style: TextStyle(
+                              fontFamily: 'Montserrat',
+                              fontSize: 20,
+                              color: const Color(0xffffffff),
+                              letterSpacing: 0.8,
+                              fontWeight: FontWeight.w700,
+                              height: 1.5,
+                            ),
+                            textHeightBehavior:
+                            TextHeightBehavior(applyHeightToFirstAscent: false),
+                            textAlign: TextAlign.center,
+                            softWrap: false,
+                          ),
+                        ),
+                        Container(
+                          height: height/120,width: width*0.30,
+                          decoration: BoxDecoration(
+                              color: Colors.green,
 
-             Container(
-               margin: EdgeInsets.only(left: 20,right: width>500?MediaQuery.of(context).size.width*0.5:width*0.3),
+                              borderRadius: BorderRadius.circular(10)
+                          ),
+                        )
+                      ],),),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).pushReplacementNamed(
+                          SignUp.routeName);
+                    },
+                    child: Container(
 
+                      child: Text(
+                        'Sign Up',
+                        style: TextStyle(
+                          fontFamily: 'Montserrat',
+                          fontSize: 20,
+                          color: const Color(0xffffffff),
+                          letterSpacing: 0.8,
+                          fontWeight: FontWeight.w700,
+                          height: 1.5,
+                        ),
+                        textHeightBehavior:
+                        TextHeightBehavior(applyHeightToFirstAscent: false),
+                        textAlign: TextAlign.center,
+                        softWrap: false,
+                      ),
+                    ),
+                  ),
 
-
-               child:     Column(
-
-
-               children: [
-
-                 Container(
-                   child: Text(
-                     'Log In',
-                     style: TextStyle(
-                       fontFamily: 'Montserrat',
-                       fontSize: 20,
-                       color: const Color(0xffffffff),
-                       letterSpacing: 0.8,
-                       fontWeight: FontWeight.w700,
-                       height: 1.5,
-                     ),
-                     textHeightBehavior:
-                     TextHeightBehavior(applyHeightToFirstAscent: false),
-                     textAlign: TextAlign.center,
-                     softWrap: false,
-                   ),
-                 ),
-                 Container(
-                   height: height/120,width: width*0.30,
-                   decoration: BoxDecoration(
-                       color: Colors.green,
-
-                       borderRadius: BorderRadius.circular(10)
-                   ),
-                 )
-               ],),),
-                 GestureDetector(
-                   onTap: () {
-                     Navigator.push(
-                         context, MaterialPageRoute(builder: (_) => SignUp()));
-                   },
-                   child: Container(
-
-                     child: Text(
-                       'Sign Up',
-                       style: TextStyle(
-                         fontFamily: 'Montserrat',
-                         fontSize: 20,
-                         color: const Color(0xffffffff),
-                         letterSpacing: 0.8,
-                         fontWeight: FontWeight.w700,
-                         height: 1.5,
-                       ),
-                       textHeightBehavior:
-                       TextHeightBehavior(applyHeightToFirstAscent: false),
-                       textAlign: TextAlign.center,
-                       softWrap: false,
-                     ),
-                   ),
-                 ),
-
-               ],
-             ) ,
-           )
+                ],
+              ) ,
+            )
           ],
         )
 

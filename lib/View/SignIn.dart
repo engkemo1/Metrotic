@@ -1,11 +1,31 @@
+
+import 'dart:developer';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:metrotic/widget/BackGround.dart';
 import 'package:metrotic/widget/PillInput.dart';
+import 'package:provider/src/provider.dart';
 
 import 'HomScreen.dart';
+import 'firebase_auth.dart';
 
-class SignIn extends StatelessWidget {
+class SignIn extends StatefulWidget {
+
+  static const routeName = "/sign_in";
+
+  @override
+  State<SignIn> createState() => _SignInState();
+}
+
+class _SignInState extends State<SignIn> {
+
+  User? user = FirebaseAuth.instance.currentUser;
+
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     var height =MediaQuery.of(context).size.height;
@@ -17,38 +37,43 @@ class SignIn extends StatelessWidget {
           child: ListView(
             children: <Widget>[
               Container(
+                height: MediaQuery.of(context).size.height*0.4,
                 child:  BackGround(),
               ),
               SizedBox(
                 height: 40,
               ),
               Container(
-                  padding: EdgeInsets.only(left:width>1000?width*0.17:width> 500?width*0.12:25,right: width>1000?width*0.17:width> 500?width*0.12:25),
-                  margin: EdgeInsets.only(left:width>1000?width*0.17:width> 500?width*0.12:25,right: width>1000?width*0.17:width> 500?width*0.12:25),
-
-
-                  child:
-                  Column(
-                    children: [
-                      TextInput(
-                        name: "Phone Number",
-                        hint: "Enter Your Number",
+                width: double.infinity,
+                //margin: EdgeInsets.all(8.0),
+                padding: EdgeInsets.only(left:width>1000?width*0.20:width> 400?width*0.15:30,right: width>1000?width*0.20:width> 400?width*0.15:30),
+                //margin: EdgeInsets.only(left:width>1000?width*0.20:width> 400?width*0.15:30,right: width>1000?width*0.20:width> 400?width*0.15:30),
+                child:Column(
+                  children: [
+                    TextField(
+                      controller: emailController,
+                      decoration: InputDecoration(
+                        labelText: "Email",
+                        hintText: "Enter Your Email",
                       ),
-                      SizedBox(
-                        height: 20,
+                      keyboardType: TextInputType.emailAddress,
+
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    TextField(
+                      controller: passwordController,
+                      decoration: InputDecoration(
+                        labelText: "Password",
+                        hintText: "Enter Your Password",
                       ),
-                      TextInput(
-                        name: "Password",
-                        hint: "Enter Your Password",
-                      ),
-                    ],
-                  )
+                      keyboardType: TextInputType.visiblePassword,
 
-
-
+                    ),
+                  ],
+                ),
               ),
-
-
               SizedBox(
                 height: 20,
               ),
@@ -58,27 +83,43 @@ class SignIn extends StatelessWidget {
 
                 },
                 child: Container(
-                    margin: EdgeInsets.only(left:width>1000?width*0.35:width> 500?width*0.30:70,right: width>1000?width*0.35:width> 500?width*0.30:70),
+                    margin: EdgeInsets.only(left:width>1000?width*0.45:width> 400?width*0.40:100,right: width>1000?width*0.45:width> 400?width*0.40:100),
                     width: 190.0,
                     height: 55.0,
                     decoration: BoxDecoration(
                       color: const Color(0xff00334a),
                       borderRadius: BorderRadius.circular(28.0),
                     ),
-                    child: Center(
-                      child: Text(
-                        'log in',
-                        style: TextStyle(
-                          fontFamily: 'Montserrat',
-                          fontSize: 13,
-                          color: const Color(0xffffffff),
-                          letterSpacing: 0.65,
-                          fontWeight: FontWeight.w700,
-                          height: 1.2307692307692308,
+                    child: GestureDetector(
+                      onTap: () {
+                        context.read<AuthService>().signIn(
+                          email: emailController.text.trim(),
+                          password: passwordController.text.trim(),
+                        );
+                        if(user != null){
+                          Navigator.of(context).pushReplacementNamed(
+                              Home.routeName);
+                        }else{
+                          log("Something wrong");
+                        }
+
+                      },
+                      child: Center(
+
+                        child: Text(
+                          'log in',
+                          style: TextStyle(
+                            fontFamily: 'Montserrat',
+                            fontSize: 13,
+                            color: const Color(0xffffffff),
+                            letterSpacing: 0.65,
+                            fontWeight: FontWeight.w700,
+                            height: 1.2307692307692308,
+                          ),
+                          textHeightBehavior:
+                          TextHeightBehavior(applyHeightToFirstAscent: false),
+                          softWrap: false,
                         ),
-                        textHeightBehavior:
-                        TextHeightBehavior(applyHeightToFirstAscent: false),
-                        softWrap: false,
                       ),
                     )),
               ),

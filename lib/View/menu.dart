@@ -1,11 +1,21 @@
+import 'dart:developer';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:metrotic/View/About.dart';
+import 'package:metrotic/View/SignIn.dart';
 import 'package:metrotic/View/supsciptions/Subscription%20Details.dart';
 import 'package:metrotic/widget/Map%20Metro.dart';
 import 'package:metrotic/widget/Person.dart';
+import 'package:provider/src/provider.dart';
+
+import 'firebase_auth.dart';
 
 class Menu extends StatelessWidget {
+
+  User? user = FirebaseAuth.instance.currentUser;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -117,7 +127,7 @@ class Menu extends StatelessWidget {
                 GestureDetector(
                   onTap: () {
 
-                   Navigator.push(context,MaterialPageRoute(builder: (_) => SupscripDetails1()));
+                    Navigator.push(context,MaterialPageRoute(builder: (_) => SupscripDetails1()));
 
                   },
                   child: Column(
@@ -306,6 +316,15 @@ class Menu extends StatelessWidget {
                   height: 40,
                 ),
                 GestureDetector(
+                    onTap: () async {
+                      await context.read<AuthService>().signOut();
+                      if(user == null){
+                        Navigator.of(context).pushReplacementNamed(
+                            SignIn.routeName);
+                      }else {
+                        log("Something wrong");
+                      }
+                    },
                     child: Center(
                       child: Text(
                         'Sign out',
