@@ -22,6 +22,10 @@ class SignUp extends StatelessWidget {
         var width =MediaQuery.of(context).size.width;
         final TextEditingController emailController = TextEditingController();
         final TextEditingController passwordController = TextEditingController();
+        final TextEditingController nameController = TextEditingController();
+        final TextEditingController phoneController = TextEditingController();
+        final TextEditingController tagIDController = TextEditingController();
+        final TextEditingController nationalIDController = TextEditingController();
 
         return Scaffold(
             backgroundColor: const Color(0xffffffff),
@@ -40,9 +44,14 @@ class SignUp extends StatelessWidget {
                         margin: EdgeInsets.only(left:width>1000?width*0.17:width> 500?width*0.12:25,right: width>1000?width*0.17:width> 500?width*0.12:25),
 
                         child: Column(children: [
-                            TextInput(
-                                name: "Name",
-                                hint: "Enter Your Full Name",
+                            TextField(
+                                controller: nameController,
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(32.0))),
+                                    labelText: "Name",
+                                    hintText: "Enter Your Full Name",
+                                ),
+                                keyboardType: TextInputType.name,
                             ),
 
 
@@ -50,9 +59,14 @@ class SignUp extends StatelessWidget {
                                 height: 20,
                             ),
 
-                            TextInput(
-                                name: "Phone Number",
-                                hint: "Enter Your Number",
+                            TextField(
+                                controller: phoneController,
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(32.0))),
+                                    labelText: "Phone Number",
+                                    hintText: "Enter Your Number",
+                                ),
+                                keyboardType: TextInputType.phone,
 
                             ),
 
@@ -88,9 +102,14 @@ class SignUp extends StatelessWidget {
                             SizedBox(
                                 height: 20,
                             ),
-                            TextInput(
-                                name: "Tag ID",
-                                hint: "Enter Your Tag ID",
+                            TextField(
+                                controller: tagIDController,
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(32.0))),
+                                    labelText: "Tag ID",
+                                    hintText: "Enter Your Tag ID",
+                                ),
+                                keyboardType: TextInputType.visiblePassword,
 
                             ),
 
@@ -98,9 +117,14 @@ class SignUp extends StatelessWidget {
                             SizedBox(
                                 height: 20,
                             ),
-                            TextInput(
-                                name: "National ID",
-                                hint: "Enter Your National ID",
+                            TextField(
+                                controller: nationalIDController,
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(32.0))),
+                                    labelText: "National ID",
+                                    hintText: "Enter Your National ID",
+                                ),
+                                keyboardType: TextInputType.visiblePassword,
 
                             ),
 
@@ -115,6 +139,10 @@ class SignUp extends StatelessWidget {
                             context.read<AuthService>().signUp(
                                 email: emailController.text.trim(),
                                 password: passwordController.text.trim(),
+                                name: nameController.text.trim(),
+                                phone: phoneController.text.trim(),
+                                tagID: tagIDController.text.trim(),
+                                nationalID: nationalIDController.text.trim()
                             );
                             if(user != null){
                                 Navigator.push(context, MaterialPageRoute(builder: (_)=>Verification()));
@@ -139,7 +167,7 @@ class SignUp extends StatelessWidget {
                                 },
                               child: Center(
                                   child: Text(
-                                      'log in',
+                                      'Sign Up',
                                       style: TextStyle(
                                           fontFamily: 'Montserrat',
                                           fontSize: 13,
@@ -178,7 +206,7 @@ class SignUp extends StatelessWidget {
 
                                 },
                                 child: Text(
-                                    'Sign UP',
+                                    'Login',
 
                                     style: TextStyle(
                                         fontFamily: 'Montserrat',

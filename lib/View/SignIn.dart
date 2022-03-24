@@ -53,6 +53,7 @@ class _SignInState extends State<SignIn> {
                     TextField(
                       controller: emailController,
                       decoration: InputDecoration(
+                        border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(32.0))),
                         labelText: "Email",
                         hintText: "Enter Your Email",
                       ),
@@ -65,6 +66,7 @@ class _SignInState extends State<SignIn> {
                     TextField(
                       controller: passwordController,
                       decoration: InputDecoration(
+                        border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(32.0))),
                         labelText: "Password",
                         hintText: "Enter Your Password",
                       ),
