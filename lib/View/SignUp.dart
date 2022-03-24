@@ -62,6 +62,7 @@ class SignUp extends StatelessWidget {
                             TextField(
                                 controller: emailController,
                                 decoration: InputDecoration(
+                                    border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(32.0))),
                                     labelText: "Email",
                                     hintText: "Enter Your Email",
                                 ),
@@ -75,6 +76,7 @@ class SignUp extends StatelessWidget {
                             TextField(
                                 controller: passwordController,
                                 decoration: InputDecoration(
+                                    border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(32.0))),
                                     labelText: "Password",
                                     hintText: "Enter Your Password",
                                 ),
