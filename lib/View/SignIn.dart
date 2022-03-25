@@ -23,24 +23,35 @@ class SignIn extends StatelessWidget {
                 height: 40,
               ),
               Container(
-                  padding: EdgeInsets.only(left:width>1000?width*0.17:width> 500?width*0.12:25,right: width>1000?width*0.17:width> 500?width*0.12:25),
-                  margin: EdgeInsets.only(left:width>1000?width*0.17:width> 500?width*0.12:25,right: width>1000?width*0.17:width> 500?width*0.12:25),
+ auth
+                width: double.infinity,
+                //margin: EdgeInsets.all(8.0),
+                padding: EdgeInsets.only(left:width>1000?width*0.20:width> 400?width*0.15:30,right: width>1000?width*0.20:width> 400?width*0.15:30),
+                //margin: EdgeInsets.only(left:width>1000?width*0.20:width> 400?width*0.15:30,right: width>1000?width*0.20:width> 400?width*0.15:30),
+                child:Column(
+                  children: [
+                    TextField(
+                      controller: emailController,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(32.0))),
+                        labelText: "Email",
+                        hintText: "Enter Your Email",
+                      ),
+                      keyboardType: TextInputType.emailAddress,
 
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    TextField(
+                      controller: passwordController,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(32.0))),
+                        labelText: "Password",
+                        hintText: "Enter Your Password",
 
-                  child:
-                  Column(
-                    children: [
-                      TextInput(
-                        name: "Phone Number",
-                        hint: "Enter Your Number",
                       ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      TextInput(
-                        name: "Password",
-                        hint: "Enter Your Password",
-                      ),
+                    
                     ],
                   )
 

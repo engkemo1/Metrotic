@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart' as auth;
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:metrotic/models/user.dart';
 
 class AuthService {
@@ -17,6 +18,19 @@ class AuthService {
 
   Stream<User?> get user => _firebaseAuth.authStateChanges().map(_userFromFirebase);
 
+  CollectionReference usersReference = FirebaseFirestore.instance.collection('Users') ;
+
+  Future<void> register({required String name, required String email,
+    required String phone, required String tagID, required String nationalID}) async {
+    await usersReference.add({
+      'name': name,
+      'email': email,
+      'phone': phone,
+      'tagID': tagID,
+      'nationalID': nationalID,
+    });
+  }
+
   Future<String> signIn({required String email, required String password}) async {
     try{
       await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
@@ -26,9 +40,11 @@ class AuthService {
     }
   }
 
-  Future<String> signUp({required String email, required String password}) async {
+  Future<String> signUp({required String email, required String password, required String name,
+    required String phone, required String tagID, required String nationalID}) async {
     try{
       await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
+      register(name: name, email: email, phone: phone, tagID: tagID, nationalID: nationalID);
       return "Signed in";
     } on auth.FirebaseAuthException catch(e){
       return e.message;
