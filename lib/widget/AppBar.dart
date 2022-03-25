@@ -1,8 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:metrotic/View/Profile2.dart';
-import 'package:metrotic/View/menu.dart';
-import 'package:metrotic/widget/Person.dart';
+
+import '../View/Profile2.dart';
+import '../View/menu.dart';
+import 'Person.dart';
 
 
 class AppBarr extends StatelessWidget {

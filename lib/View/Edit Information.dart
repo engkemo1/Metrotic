@@ -4,14 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:metrotic/helper.dart';
-import 'package:metrotic/widget/AppBar.dart';
-import 'package:metrotic/widget/Person.dart';
-import 'package:metrotic/widget/PillInput.dart';
-import 'package:metrotic/widget/botom%20Bar.dart';
 import 'package:provider/provider.dart';
 
 import '../Controller/PickImage.dart';
+import '../helper.dart';
+import '../widget/AppBar.dart';
+import '../widget/Person.dart';
+import '../widget/botom Bar.dart';
 
 class EditInfo extends StatefulWidget {
   const EditInfo({Key? key}) : super(key: key);

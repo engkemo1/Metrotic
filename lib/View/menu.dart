@@ -1,33 +1,20 @@
-import 'dart:developer';
-
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:metrotic/View/About.dart';
-import 'package:metrotic/View/SignIn.dart';
-import 'package:metrotic/View/supsciptions/Subscription%20Details.dart';
-import 'package:metrotic/widget/Map%20Metro.dart';
-import 'package:metrotic/widget/Person.dart';
-import 'package:provider/src/provider.dart';
+import 'package:test/View/supsciptions/Subscription%20Details.dart';
 
-import 'firebase_auth.dart';
+import '../widget/Map Metro.dart';
+import '../widget/Person.dart';
+import 'About.dart';
 
 class Menu extends StatelessWidget {
-
-  User? user = FirebaseAuth.instance.currentUser;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: const Color(0xffffffff),
         body: SafeArea(
-
           child: Container(
             padding: EdgeInsets.only(left: 15),
-            width: MediaQuery
-                .of(context)
-                .size
-                .width,
+            width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
               color: const Color(0xff00334a),
               borderRadius: BorderRadius.only(
@@ -37,23 +24,28 @@ class Menu extends StatelessWidget {
             ),
             margin: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 50.0),
             child: ListView(
-
               children: [
-                Row(mainAxisAlignment: MainAxisAlignment.end,
-                  children: [ GestureDetector(onTap: () {
-                    Navigator.of(context).pop();
-                  },
-                    child: Image.asset("assets/exist.png"),
-                  ),
-                  ],),
-                Person(high: 100,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Image.asset("assets/exist.png"),
+                    ),
+                  ],
+                ),
+                Person(
+                    high: 100,
                     width: 100,
                     color: Colors.white,
                     color2: const Color(0xff00334a),
                     size: 80,
                     reduis: 80),
-                SizedBox(height: 20,),
-
+                SizedBox(
+                  height: 20,
+                ),
                 GestureDetector(
                     onTap: () {},
                     child: Column(
@@ -126,9 +118,8 @@ class Menu extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: () {
-
-                    Navigator.push(context,MaterialPageRoute(builder: (_) => SupscripDetails1()));
-
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (_) => SupscripDetails1()));
                   },
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -143,7 +134,7 @@ class Menu extends StatelessWidget {
                           height: 1.608695652173913,
                         ),
                         textHeightBehavior:
-                        TextHeightBehavior(applyHeightToFirstAscent: false),
+                            TextHeightBehavior(applyHeightToFirstAscent: false),
                         softWrap: false,
                       ),
                       Text(
@@ -155,7 +146,7 @@ class Menu extends StatelessWidget {
                           height: 1.5833333333333333,
                         ),
                         textHeightBehavior:
-                        TextHeightBehavior(applyHeightToFirstAscent: false),
+                            TextHeightBehavior(applyHeightToFirstAscent: false),
                         softWrap: false,
                       ),
                     ],
@@ -165,10 +156,7 @@ class Menu extends StatelessWidget {
                   height: 15,
                 ),
                 GestureDetector(
-                  onTap: () {
-
-
-                  },
+                  onTap: () {},
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -182,7 +170,7 @@ class Menu extends StatelessWidget {
                           height: 1.608695652173913,
                         ),
                         textHeightBehavior:
-                        TextHeightBehavior(applyHeightToFirstAscent: false),
+                            TextHeightBehavior(applyHeightToFirstAscent: false),
                         softWrap: false,
                       ),
                       Text(
@@ -194,7 +182,7 @@ class Menu extends StatelessWidget {
                           height: 1.5833333333333333,
                         ),
                         textHeightBehavior:
-                        TextHeightBehavior(applyHeightToFirstAscent: false),
+                            TextHeightBehavior(applyHeightToFirstAscent: false),
                         softWrap: false,
                       ),
                     ],
@@ -205,8 +193,8 @@ class Menu extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (_) => MapMetro()));
+                    Navigator.push(
+                        context, MaterialPageRoute(builder: (_) => MapMetro()));
                   },
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -221,7 +209,7 @@ class Menu extends StatelessWidget {
                           height: 1.608695652173913,
                         ),
                         textHeightBehavior:
-                        TextHeightBehavior(applyHeightToFirstAscent: false),
+                            TextHeightBehavior(applyHeightToFirstAscent: false),
                         softWrap: false,
                       ),
                       Text(
@@ -233,7 +221,7 @@ class Menu extends StatelessWidget {
                           height: 1.5833333333333333,
                         ),
                         textHeightBehavior:
-                        TextHeightBehavior(applyHeightToFirstAscent: false),
+                            TextHeightBehavior(applyHeightToFirstAscent: false),
                         softWrap: false,
                       ),
                     ],
@@ -257,7 +245,7 @@ class Menu extends StatelessWidget {
                           height: 1.608695652173913,
                         ),
                         textHeightBehavior:
-                        TextHeightBehavior(applyHeightToFirstAscent: false),
+                            TextHeightBehavior(applyHeightToFirstAscent: false),
                         softWrap: false,
                       ),
                       Text(
@@ -269,7 +257,7 @@ class Menu extends StatelessWidget {
                           height: 1.5833333333333333,
                         ),
                         textHeightBehavior:
-                        TextHeightBehavior(applyHeightToFirstAscent: false),
+                            TextHeightBehavior(applyHeightToFirstAscent: false),
                         softWrap: false,
                       ),
                     ],
@@ -279,7 +267,9 @@ class Menu extends StatelessWidget {
                   height: 15,
                 ),
                 GestureDetector(
-                  onTap: () {                   Navigator.push(context,MaterialPageRoute(builder: (_) => About()));
+                  onTap: () {
+                    Navigator.push(
+                        context, MaterialPageRoute(builder: (_) => About()));
                   },
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -294,7 +284,7 @@ class Menu extends StatelessWidget {
                           height: 1.608695652173913,
                         ),
                         textHeightBehavior:
-                        TextHeightBehavior(applyHeightToFirstAscent: false),
+                            TextHeightBehavior(applyHeightToFirstAscent: false),
                         softWrap: false,
                       ),
                       Text(
@@ -306,7 +296,7 @@ class Menu extends StatelessWidget {
                           height: 1.5833333333333333,
                         ),
                         textHeightBehavior:
-                        TextHeightBehavior(applyHeightToFirstAscent: false),
+                            TextHeightBehavior(applyHeightToFirstAscent: false),
                         softWrap: false,
                       ),
                     ],
@@ -316,30 +306,21 @@ class Menu extends StatelessWidget {
                   height: 40,
                 ),
                 GestureDetector(
-                    onTap: () async {
-                      await context.read<AuthService>().signOut();
-                      if(user == null){
-                        Navigator.of(context).pushReplacementNamed(
-                            SignIn.routeName);
-                      }else {
-                        log("Something wrong");
-                      }
-                    },
                     child: Center(
-                      child: Text(
-                        'Sign out',
-                        style: TextStyle(
-                          fontFamily: 'Montserrat',
-                          fontSize: 29,
-                          color: const Color(0xffffffff),
-                          fontWeight: FontWeight.w700,
-                          height: 1.6206896551724137,
-                        ),
-                        textHeightBehavior:
+                  child: Text(
+                    'Sign out',
+                    style: TextStyle(
+                      fontFamily: 'Montserrat',
+                      fontSize: 29,
+                      color: const Color(0xffffffff),
+                      fontWeight: FontWeight.w700,
+                      height: 1.6206896551724137,
+                    ),
+                    textHeightBehavior:
                         TextHeightBehavior(applyHeightToFirstAscent: false),
-                        softWrap: false,
-                      ),
-                    )),
+                    softWrap: false,
+                  ),
+                )),
               ],
             ),
           ),

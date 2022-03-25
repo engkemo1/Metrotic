@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
-import 'package:metrotic/helper.dart';
-import 'package:metrotic/widget/botom%20Bar.dart';
 
+import '../../helper.dart';
 import '../../widget/AppBar.dart';
+import '../../widget/botom Bar.dart';
 
 class TicketPrice extends StatefulWidget {
   const TicketPrice({Key? key}) : super(key: key);

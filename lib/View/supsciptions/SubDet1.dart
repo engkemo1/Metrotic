@@ -1,13 +1,11 @@
-import 'package:expandable/expandable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
-import 'package:metrotic/widget/Expandable.dart';
-import 'package:metrotic/widget/botom%20Bar.dart';
 
 import '../../helper.dart';
 import '../../widget/AppBar.dart';
+import '../../widget/Expandable.dart';
+import '../../widget/botom Bar.dart';
 
 class SupDet1 extends StatefulWidget {
   const SupDet1({Key? key}) : super(key: key);

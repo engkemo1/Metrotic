@@ -1,8 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:metrotic/helper.dart';
-import 'package:metrotic/widget/AppBar.dart';
-import 'package:metrotic/widget/botom%20Bar.dart';
+
+import '../helper.dart';
+import '../widget/AppBar.dart';
+import '../widget/botom Bar.dart';
 
 class CurrentBalance extends StatefulWidget {
   const CurrentBalance({Key? key}) : super(key: key);

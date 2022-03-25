@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:metrotic/helper.dart';
-import 'package:metrotic/widget/AppBar.dart';
+
+import '../helper.dart';
+import '../widget/AppBar.dart';
 
 class About extends StatelessWidget {
   const About({Key? key}) : super(key: key);

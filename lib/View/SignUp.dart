@@ -1,28 +1,14 @@
-import 'dart:developer';
-
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:metrotic/View/firebase_auth.dart';
-import 'package:metrotic/widget/BackGround%20SignUp.dart';
-import 'package:metrotic/widget/PillInput.dart';
-import 'package:provider/src/provider.dart';
-import 'HomScreen.dart';
+import '../widget/BackGround SignUp.dart';
+import '../widget/PillInput.dart';
 import 'verification.dart';
 import 'SignIn.dart';
 
 class SignUp extends StatelessWidget {
-    static const routeName = "/sign_up";
-
-    User? user = FirebaseAuth.instance.currentUser;
-
     @override
     Widget build(BuildContext context) {
         var height =MediaQuery.of(context).size.height;
         var width =MediaQuery.of(context).size.width;
-        final TextEditingController emailController = TextEditingController();
-        final TextEditingController passwordController = TextEditingController();
-
         return Scaffold(
             backgroundColor: const Color(0xffffffff),
             body:SafeArea(child: ListView(
@@ -59,26 +45,18 @@ class SignUp extends StatelessWidget {
                             SizedBox(
                                 height: 20,
                             ),
-                            TextField(
-                                controller: emailController,
-                                decoration: InputDecoration(
-                                    labelText: "Email",
-                                    hintText: "Enter Your Email",
-                                ),
-                                keyboardType: TextInputType.emailAddress,
+                            TextInput(
+                                name: "Email",
+                                hint: "Enter Your Email",
 
                             ),
 
                             SizedBox(
                                 height: 20,
                             ),
-                            TextField(
-                                controller: passwordController,
-                                decoration: InputDecoration(
-                                    labelText: "Password",
-                                    hintText: "Enter Your Password",
-                                ),
-                                keyboardType: TextInputType.visiblePassword,
+                            TextInput(
+                                name: "Password",
+                                hint: "Enter Your Password",
 
                             ),
 
@@ -110,16 +88,7 @@ class SignUp extends StatelessWidget {
                     ),
                     GestureDetector(
                         onTap: () {
-                            context.read<AuthService>().signUp(
-                                email: emailController.text.trim(),
-                                password: passwordController.text.trim(),
-                            );
-                            if(user != null){
-                                Navigator.push(context, MaterialPageRoute(builder: (_)=>Verification()));
-                            }else{
-                                log("Something wrong");
-                            }
-
+                            Navigator.push(context, MaterialPageRoute(builder: (_)=>Verification()));
                         },
                         child: Container(
                             margin: EdgeInsets.only(left:width>1000?width*0.35:width> 500?width*0.30:70,right: width>1000?width*0.35:width> 500?width*0.30:70),
@@ -130,27 +99,21 @@ class SignUp extends StatelessWidget {
                                 color: const Color(0xff00334a),
                                 borderRadius: BorderRadius.circular(28.0),
                             ),
-                            child: GestureDetector(
-                                onTap: () {
-                                    Navigator.of(context).pushReplacementNamed(
-                                        Home.routeName);
-                                },
-                              child: Center(
-                                  child: Text(
-                                      'log in',
-                                      style: TextStyle(
-                                          fontFamily: 'Montserrat',
-                                          fontSize: 13,
-                                          color: const Color(0xffffffff),
-                                          letterSpacing: 0.65,
-                                          fontWeight: FontWeight.w700,
-                                          height: 1.2307692307692308,
-                                      ),
-                                      textHeightBehavior:
-                                      TextHeightBehavior(applyHeightToFirstAscent: false),
-                                      softWrap: false,
-                                  ),
-                              ),
+                            child: Center(
+                                child: Text(
+                                    'log in',
+                                    style: TextStyle(
+                                        fontFamily: 'Montserrat',
+                                        fontSize: 13,
+                                        color: const Color(0xffffffff),
+                                        letterSpacing: 0.65,
+                                        fontWeight: FontWeight.w700,
+                                        height: 1.2307692307692308,
+                                    ),
+                                    textHeightBehavior:
+                                    TextHeightBehavior(applyHeightToFirstAscent: false),
+                                    softWrap: false,
+                                ),
                             )),
                     ),
                     SizedBox(height: 10,)
@@ -176,7 +139,7 @@ class SignUp extends StatelessWidget {
 
                                 },
                                 child: Text(
-                                    'Sign UP',
+                                    'Log In',
 
                                     style: TextStyle(
                                         fontFamily: 'Montserrat',
