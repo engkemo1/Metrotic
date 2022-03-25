@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:metrotic/View/SignIn.dart';
+
+import '../View/SignIn.dart';
 
 class BackGroundSignUp extends StatelessWidget {
 
@@ -38,9 +39,7 @@ class BackGroundSignUp extends StatelessWidget {
             children: [
               GestureDetector(
                 onTap: (){
-                  Navigator.of(context).pushReplacementNamed(
-                      SignIn.routeName);
-
+                  Navigator.push(context, MaterialPageRoute(builder: (_)=>SignIn()));
                 },
                 child:   Container(
 
@@ -81,14 +80,14 @@ class BackGroundSignUp extends StatelessWidget {
                   ),
                 ),
 
-                Container(
-                  height: height/200,width: width*0.30,
-                  decoration: BoxDecoration(
-                      color: Colors.green,
+               Container(
+                 height: height/200,width: width*0.30,
+                 decoration: BoxDecoration(
+                     color: Colors.green,
 
-                      borderRadius: BorderRadius.circular(10)
-                  ),
-                )
+                     borderRadius: BorderRadius.circular(10)
+                 ),
+               )
               ],)
 
             ],

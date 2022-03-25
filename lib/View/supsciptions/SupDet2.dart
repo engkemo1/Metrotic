@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:metrotic/widget/Expandable.dart';
-import 'package:metrotic/widget/botom%20Bar.dart';
 
 import '../../helper.dart';
 import '../../widget/AppBar.dart';
+import '../../widget/Expandable.dart';
+import '../../widget/botom Bar.dart';
 
 class SupDet2 extends StatefulWidget {
   const SupDet2({Key? key}) : super(key: key);

@@ -1,21 +1,10 @@
-import 'dart:developer';
-
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:metrotic/View/firebase_auth.dart';
-import 'package:metrotic/widget/BackGround%20SignUp.dart';
-import 'package:metrotic/widget/PillInput.dart';
-import 'package:provider/src/provider.dart';
-import 'HomScreen.dart';
+import '../widget/BackGround SignUp.dart';
+import '../widget/PillInput.dart';
 import 'verification.dart';
 import 'SignIn.dart';
 
 class SignUp extends StatelessWidget {
-    static const routeName = "/sign_up";
-
-    User? user = FirebaseAuth.instance.currentUser;
-
     @override
     Widget build(BuildContext context) {
         var height =MediaQuery.of(context).size.height;
@@ -150,6 +139,7 @@ class SignUp extends StatelessWidget {
                                 log("Something wrong");
                             }
 
+
                         },
                         child: Container(
                             margin: EdgeInsets.only(left:width>1000?width*0.35:width> 500?width*0.30:70,right: width>1000?width*0.35:width> 500?width*0.30:70),
@@ -181,6 +171,7 @@ class SignUp extends StatelessWidget {
                                       softWrap: false,
                                   ),
                               ),
+
                             )),
                     ),
                     SizedBox(height: 10,)

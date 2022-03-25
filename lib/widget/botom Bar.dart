@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:jumping_bottom_nav_bar/jumping_bottom_nav_bar.dart';
-import 'package:metrotic/View/Current%20balance.dart';
-import 'package:metrotic/View/HomScreen.dart';
-import 'package:metrotic/View/Notification.dart';
-import 'package:metrotic/View/Setting.dart';
+import '../View/Current balance.dart';
+import '../View/HomScreen.dart';
+import '../View/Notification.dart';
 import '../View/Profile2.dart';
+import '../View/Setting.dart';
 import '../helper.dart';
 
 class BotoomBar extends StatelessWidget {
@@ -15,7 +15,7 @@ class BotoomBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return JumpingTabBar(
-      duration:Duration(seconds: 3) ,
+      duration:Duration(seconds: 1) ,
       backgroundColor: Colors.white,
       circleGradient: LinearGradient(
         colors: [Colors.white, Colors.white],

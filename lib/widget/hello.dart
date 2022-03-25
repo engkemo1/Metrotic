@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:metrotic/widget/botom%20Bar.dart';
 import 'dart:ui' as ui;
+
+import 'botom Bar.dart';
 
 class Profile extends StatefulWidget {
   @override

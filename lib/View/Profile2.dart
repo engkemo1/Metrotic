@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:metrotic/widget/AppBar.dart';
-import 'package:metrotic/widget/Person.dart';
-import 'package:metrotic/widget/botom%20Bar.dart';
+
+import '../widget/AppBar.dart';
+import '../widget/Person.dart';
+import '../widget/botom Bar.dart';
 
 class Profile extends StatefulWidget {
   

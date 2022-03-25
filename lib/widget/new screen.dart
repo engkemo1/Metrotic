@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:metrotic/View/HomScreen.dart';
-import 'package:metrotic/View/menu.dart';
+
+import '../View/HomScreen.dart';
+import '../View/menu.dart';
 
 
 class HomeNew extends StatefulWidget {

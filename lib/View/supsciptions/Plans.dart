@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:metrotic/View/supsciptions/SupDet2.dart';
-import 'package:metrotic/View/supsciptions/SupDet3.dart';
-import 'package:metrotic/widget/botom%20Bar.dart';
 
 import '../../helper.dart';
 import '../../widget/AppBar.dart';
+import '../../widget/botom Bar.dart';
 import 'SubDet1.dart';
+import 'SupDet2.dart';
+import 'SupDet3.dart';
 class Plans extends StatefulWidget {
   const Plans({Key? key}) : super(key: key);
 

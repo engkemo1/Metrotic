@@ -1,7 +1,8 @@
 
 import 'package:flutter/material.dart';
-import 'package:metrotic/Controller/PickImage.dart';
 import 'package:provider/provider.dart';
+
+import '../Controller/PickImage.dart';
 
 class Person extends StatelessWidget {
   final double high;

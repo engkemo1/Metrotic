@@ -1,13 +1,12 @@
 
 
 import 'package:flutter/material.dart';
-import 'package:metrotic/View/supsciptions/Plans.dart';
-
-import 'package:metrotic/View/supsciptions/TicketPrice.dart';
-import 'package:metrotic/widget/AppBar.dart';
-import 'package:metrotic/widget/botom%20Bar.dart';
 
 import '../../helper.dart';
+import '../../widget/AppBar.dart';
+import '../../widget/botom Bar.dart';
+import 'Plans.dart';
+import 'TicketPrice.dart';
 
 class SupscripDetails1 extends StatefulWidget {
   const SupscripDetails1({Key? key}) : super(key: key);
