@@ -1,20 +1,20 @@
-import 'dart:math';
-
+import 'dart:typed_data';
+import 'package:floating_action_bubble/floating_action_bubble.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
-import 'package:geocoding/geocoding.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
-import 'package:test/widget/AppBar.dart';
+import 'package:test/View/map.dart';
 import '../helper.dart';
 import '../widget/Person.dart';
 import '../widget/botom Bar.dart';
 import '../widget/hello.dart';
 import '../widget/line Station.dart';
 import 'menu.dart';
+import 'dart:ui' as ui;
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -23,1293 +23,1373 @@ class Home extends StatefulWidget {
   _HomeState createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> {
+class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   PanelController _pc = new PanelController();
-  CameraPosition _initialLocation = CameraPosition(target: LatLng(30.033333, 31.233334),zoom: 11.5,tilt: 50.0);
   late GoogleMapController mapController;
-int? index;
-  late Position _currentPosition;
-  String _currentAddress = '';
-
-  final startAddressController = TextEditingController();
-  final destinationAddressController = TextEditingController();
-
-  final startAddressFocusNode = FocusNode();
-  final desrinationAddressFocusNode = FocusNode();
-
-  String _startAddress = '';
-  String _destinationAddress = '';
-  String? _placeDistance;
-
-  Set<Marker> markers = {};
-
   late PolylinePoints polylinePoints;
-  Map<PolylineId, Polyline> polylines = {};
+  LatLng center = LatLng(30.044420, 31.235712);
+  Set<Marker> markers = {};
+  Set<Polyline> polyline = {};
   List<LatLng> polylineCoordinates = [];
-
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
-  Widget _textField({
-    required TextEditingController controller,
-    required FocusNode focusNode,
-    required String label,
-    required String hint,
-    required double width,
-    required Icon prefixIcon,
-    Widget? suffixIcon,
-    required Function(String) locationCallback,
-  }) {
-    return Container(
-      width: width * 0.8,
-      child: TextField(
-        onChanged: (value) {
-          locationCallback(value);
-        },
-        controller: controller,
-        focusNode: focusNode,
-        decoration: new InputDecoration(
-          prefixIcon: prefixIcon,
-          suffixIcon: suffixIcon,
-          labelText: label,
-          filled: true,
-          fillColor: Colors.white,
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.all(
-              Radius.circular(10.0),
-            ),
-            borderSide: BorderSide(
-              color: Colors.grey.shade400,
-              width: 2,
-            ),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.all(
-              Radius.circular(10.0),
-            ),
-            borderSide: BorderSide(
-              color: Colors.blue.shade300,
-              width: 2,
-            ),
-          ),
-          contentPadding: EdgeInsets.all(15),
-          hintText: hint,
-        ),
-      ),
-    );
-  }
-  void getLocation() async {
-    await Geolocator.getCurrentPosition().then((value)  {
-      mapController
-          .animateCamera(CameraUpdate.newCameraPosition(new CameraPosition(
-          target: LatLng(value.latitude , value.longitude ),
-          
-          zoom: 10.0,tilt: 50.0
-      )));
-      setState(() {
-        polylineCoordinates.add(LatLng(value.latitude , value.longitude ));
-        polylineCoordinates.add(LatLng( 29.841, 31.301));
-
-        markers.add (Marker(
-            onTap: (){
-              setState(() {
-                mapController
-                    .animateCamera(CameraUpdate.newCameraPosition(new CameraPosition(
-                    target: LatLng(value.latitude , value.longitude ),
-                    zoom: 20.0,tilt: 50.0
-                )));
-              });
-            },
-
-            markerId: MarkerId('Home'),
-            position: LatLng(value.latitude , value.longitude )),);
-        markers.add(Marker(
-          onTap: (){
-            mapController
-                .animateCamera(CameraUpdate.newCameraPosition(new CameraPosition(
-                target:LatLng( 29.841, 31.301),
-                zoom: 20.0,tilt: 50.0
-            )));
-          },
-          markerId: MarkerId("destination"),
-          position: LatLng( 29.841, 31.301),
-          infoWindow: InfoWindow(
-
-          ),
-
-          icon: BitmapDescriptor.defaultMarker,
-        ));
-      });
-
-    });
-  }
-  _getCurrentLocation() async {
-    await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
-        .then((Position position) async {
-      setState(() {
-        _currentPosition = position;
-        print('CURRENT POS: $_currentPosition');
-        mapController.animateCamera(
-          CameraUpdate.newCameraPosition(
-            CameraPosition(
-              target: LatLng(position.latitude, position.longitude),
-              zoom: 18.0,
-            ),
-          ),
-        );
-      });
-      await _getAddress();
-    }).catchError((e) {
-      print(e);
-    });
-  }
-  _getAddress() async {
-    try {
-      List<Placemark> p = await placemarkFromCoordinates(
-          _currentPosition.latitude, _currentPosition.longitude);
-
-      Placemark place = p[0];
-
-      setState(() {
-        _currentAddress =
-        "${place.name}, ${place.locality}, ${place.postalCode}, ${place.country}";
-        startAddressController.text = _currentAddress;
-        _startAddress = _currentAddress;
-      });
-    } catch (e) {
-      print(e);
-    }
-  }
-  Future<bool> _calculateDistance() async {
-    try {
-      List<Location> startPlacemark = await locationFromAddress(_startAddress);
-      List<Location> destinationPlacemark =
-      await locationFromAddress(_destinationAddress);
-
-      double startLatitude = _startAddress == _currentAddress
-          ? _currentPosition.latitude
-          : startPlacemark[0].latitude;
-
-      double startLongitude = _startAddress == _currentAddress
-          ? _currentPosition.longitude
-          : startPlacemark[0].longitude;
-
-      double destinationLatitude = destinationPlacemark[0].latitude;
-      double destinationLongitude = destinationPlacemark[0].longitude;
-
-      String startCoordinatesString = '($startLatitude, $startLongitude)';
-      String destinationCoordinatesString =
-          '($destinationLatitude, $destinationLongitude)';
-
-      Marker startMarker = Marker(
-        markerId: MarkerId(startCoordinatesString),
-        position: LatLng(startLatitude, startLongitude),
-        infoWindow: InfoWindow(
-          title: 'Start $startCoordinatesString',
-          snippet: _startAddress,
-        ),
-        icon: BitmapDescriptor.defaultMarker,
-      );
-
-      // Destination Location Marker
-      Marker destinationMarker = Marker(
-        markerId: MarkerId(destinationCoordinatesString),
-        position: LatLng(destinationLatitude, destinationLongitude),
-        infoWindow: InfoWindow(
-          title: 'Destination $destinationCoordinatesString',
-          snippet: _destinationAddress,
-        ),
-        icon: BitmapDescriptor.defaultMarker,
-      );
-
-      markers.add(startMarker);
-      markers.add(destinationMarker);
-
-      print(
-        'START COORDINATES: ($startLatitude, $startLongitude)',
-      );
-      print(
-        'DESTINATION COORDINATES: ($destinationLatitude, $destinationLongitude)',
-      );
-
-
-      double miny = (startLatitude <= destinationLatitude)
-          ? startLatitude
-          : destinationLatitude;
-      double minx = (startLongitude <= destinationLongitude)
-          ? startLongitude
-          : destinationLongitude;
-      double maxy = (startLatitude <= destinationLatitude)
-          ? destinationLatitude
-          : startLatitude;
-      double maxx = (startLongitude <= destinationLongitude)
-          ? destinationLongitude
-          : startLongitude;
-
-      double southWestLatitude = miny;
-      double southWestLongitude = minx;
-
-      double northEastLatitude = maxy;
-      double northEastLongitude = maxx;
-
-
-      mapController.animateCamera(
-        CameraUpdate.newLatLngBounds(
-          LatLngBounds(
-            northeast: LatLng(northEastLatitude, northEastLongitude),
-            southwest: LatLng(southWestLatitude, southWestLongitude),
-          ),
-          100.0,
-        ),
-      );
-
-
-
-      await _createPolylines(startLatitude, startLongitude, destinationLatitude,
-          destinationLongitude);
-
-      double totalDistance = 0.0;
-
-      // Calculating the total distance by adding the distance
-      // between small segments
-      // for (int i = 0; i < polylineCoordinates.length - 1; i++) {
-      //   totalDistance += _coordinateDistance(
-      //     polylineCoordinates[i].latitude,
-      //     polylineCoordinates[i].longitude,
-      //     polylineCoordinates[i + 1].latitude,
-      //     polylineCoordinates[i + 1].longitude,
-      //   );
-      // }
-      //
-      // setState(() {
-      //   _placeDistance = totalDistance.toStringAsFixed(2);
-      //   print('DISTANCE: $_placeDistance km');
-      // });
-
-      return true;
-    } catch (e) {
-      print(e);
-    }
-    return false;
-  }
-
-  double _coordinateDistance(lat1, lon1, lat2, lon2) {
-    var p = 0.017453292519943295;
-    var c = cos;
-    var a = 0.5 -
-        c((lat2 - lat1) * p) / 2 +
-        c(lat1 * p) * c(lat2 * p) * (1 - c((lon2 - lon1) * p)) / 2;
-    return 12742 * asin(sqrt(a));
-  }
-
-  _createPolylines(
-      double startLatitude,
-      double startLongitude,
-      double destinationLatitude,
-      double destinationLongitude,
-      ) async {
-    polylinePoints = PolylinePoints();
-    PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-      "AIzaSyAWdsVZ10-lbtg_6-d2weqxOSHRZ9h4y-Q", // Google Maps API Key
-      PointLatLng(startLatitude, startLongitude),
-      PointLatLng(destinationLatitude, destinationLongitude),
-      travelMode: TravelMode.driving,
-    );
-
-    if (result.points.isNotEmpty) {
-      result.points.forEach((PointLatLng point) {
-        polylineCoordinates.add(LatLng(point.latitude, point.longitude));
-      });
-    }
-
-    PolylineId id = PolylineId('poly');
-    Polyline polyline = Polyline(
-      polylineId: id,
-      color: Colors.red,
-      points: polylineCoordinates,
-      width: 3,
-    );
-    polylines[id] = polyline;
-  }
+  MapType type = MapType.normal;
+  late Animation<double> _animation;
+  late AnimationController _animationController;
 
   @override
   void initState() {
+    _animationController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 260),
+    );
+    final curvedAnimation =
+    CurvedAnimation(curve: Curves.easeInOut, parent: _animationController);
+    _animation = Tween<double>(begin: 0, end: 1).animate(curvedAnimation);
+
+    FloatingActionBubble floating = FloatingActionBubble(
+      // Menu items
+      items: <Bubble>[
+        // Floating action menu item
+        Bubble(
+          title: "Search Your Destination",
+          iconColor: ColorsHelp.backgroundG,
+          bubbleColor: ColorsHelp.background,
+          icon: Icons.search,
+          titleStyle:
+          TextStyle(fontSize: 16, color: Colors.white),
+          onPress: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (_) => MapLocation()));
+            _animationController.reverse();
+          },
+        ),
+        // Floating action menu item
+        Bubble(
+          title: "Nearest station to me",
+          iconColor: ColorsHelp.backgroundG,
+          bubbleColor: ColorsHelp.background,
+          icon: Icons.near_me,
+          titleStyle:
+          TextStyle(fontSize: 16, color: Colors.white),
+          onPress: () {
+           Navigator.push(context,  MaterialPageRoute(
+                builder: (_) => MapLocation(GetNearStation: 2,)));
+            _animationController.reverse();
+          },
+        ),
+        Bubble(
+          title: "Get your location",
+          iconColor: ColorsHelp.backgroundG,
+          bubbleColor: ColorsHelp.background,
+          icon: Icons.my_location,
+          titleStyle:
+          TextStyle(fontSize: 16, color: Colors.white),
+          onPress: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (_) => MapLocation(GetLocation: 1,)));
+            _animationController.reverse();
+          },
+        ),
+        //Floating action menu item
+        Bubble(
+          title: " All Stations",
+          iconColor: ColorsHelp.backgroundG,
+          bubbleColor: ColorsHelp.background,
+          icon: Icons.train,
+          titleStyle:
+          TextStyle(fontSize: 16, color: Colors.white),
+          onPress: () {
+            setState(() {
+              markers;
+            });
+            _animationController.reverse();
+          },
+        ),
+
+        Bubble(
+          title: "Satellite",
+          iconColor: ColorsHelp.backgroundG,
+          bubbleColor: ColorsHelp.background,
+          icon: Icons.satellite_alt,
+          titleStyle:
+          TextStyle(fontSize: 15, color: Colors.white),
+          onPress: () {
+            setState(() {
+              type = MapType.satellite;
+            });
+            _animationController.reverse();
+          },
+        ),
+        Bubble(
+          title: "Map",
+          iconColor: ColorsHelp.backgroundG,
+          bubbleColor: ColorsHelp.background,
+          icon: Icons.map_outlined,
+          titleStyle:
+          TextStyle(fontSize: 15, color: Colors.white),
+          onPress: () {
+            setState(() {
+              type = MapType.normal;
+            });
+            _animationController.reverse();
+          },
+        ),
+      ],
+
+      // animation controller
+      animation: _animation,
+
+      // On pressed change animation state
+      onPress: () =>
+      _animationController.isCompleted
+          ? _animationController.reverse()
+          : _animationController.forward(),
+
+      // Floating Action button Icon color
+      iconColor: ColorsHelp.backgroundG,
+
+      // Flaoting Action button Icon
+      backGroundColor: ColorsHelp.background,
+      animatedIconData: AnimatedIcons.menu_close,
+    );
+    floating.onPress.call();
     super.initState();
-    getLocation();
-    _getCurrentLocation();
   }
 
+  marker() async {
+    final Uint8List markerIcon = await getBytesFromAsset('assets/me.png');
+    setState(() async {
+      markers.add(Marker(
+        //add first marker
+          markerId: MarkerId("1"),
+          position: LatLng(30.12411, 31.24358),
+
+          //position of marker
+          infoWindow: InfoWindow(
+            //popup info
+            title: 'Shubra El Kheima ',
+            snippet: 'Shark El Seka El Hadid, Shubra El Kheima',
+          ),
+          icon: await BitmapDescriptor.fromBytes(markerIcon)
+
+        //Icon for Marker
+      ));
+      markers.add(Marker(
+        //add second marker
+          markerId: MarkerId("2"),
+          position: LatLng(30.1139678256, 31.2492867704),
+          //position of marker
+          infoWindow: InfoWindow(
+            //popup info
+              title: ' كلية الزراعة',
+              snippet:
+              'كلية الزراعة شبرا الخيمة, Cairo, Cairo Governorate, Egypt'),
+          icon: await BitmapDescriptor.fromBytes(markerIcon)
+//Icon for Marker
+      ));
+      markers.add(Marker(
+        //add third marker
+          markerId: MarkerId("4"),
+          position: LatLng(30.10408, 31.24562),
+          //position of marker
+          infoWindow: InfoWindow(
+            //popup info
+              title: 'El Mazalat',
+              snippet: 'El Mazalat Bridge, Cairo'),
+          icon: await BitmapDescriptor.fromBytes(markerIcon)));
+      markers.add(Marker(
+        //add third marker
+          markerId: MarkerId("5"),
+          position: LatLng(30.0999764249, 31.2462914808),
+          //position of marker
+          infoWindow: InfoWindow(
+            //popup info
+              title: 'khalafawy',
+              snippet: 'Cairo, Egypt'),
+          icon: await BitmapDescriptor.fromBytes(markerIcon)));
+      markers.add(Marker(
+        //add third marker
+          markerId: MarkerId("6"),
+          position: LatLng(30.0879592, 31.2455034),
+          //position of marker
+          infoWindow: InfoWindow(
+            //popup info
+            title: 'St. Teresa ',
+            snippet: 'Sherif, As Sahel, Cairo Governorate, Egypt',
+          ),
+          icon: await BitmapDescriptor.fromBytes(markerIcon)));
+      markers.add(Marker(
+        //add third marker
+          markerId: MarkerId("7"),
+          position: LatLng(30.0805881, 31.2454069),
+          //position of marker
+          infoWindow: InfoWindow(
+            //popup info
+            title: 'Rod El-Farag',
+            snippet: 'Al Barad, As Sahel, Cairo Governorate, Egypt',
+          ),
+          icon: await BitmapDescriptor.fromBytes(markerIcon)));
+      markers.add(Marker(
+        //add third marker
+          markerId: MarkerId("8"),
+          position: LatLng(30.07222, 31.2449),
+          //position of marker
+          infoWindow: InfoWindow(
+            //popup info
+            title: 'Massara',
+            snippet: 'Municipality Subdivision: قسم روض الفرج',
+          ),
+          icon: await BitmapDescriptor.fromBytes(markerIcon)));
+      markers.add(Marker(
+        //add third marker
+          markerId: MarkerId("9"),
+          position: LatLng(30.0624923, 31.2495352),
+          //position of marker
+          infoWindow: InfoWindow(
+            //popup info
+            title: 'محطه مترو رمسيس',
+            snippet: 'Cairo, Cairo Governorate, Egypt',
+          ),
+          icon: await BitmapDescriptor.fromBytes(markerIcon)));
+      markers.add(Marker(
+        //add third marker
+          markerId: MarkerId("10"),
+          position: LatLng(30.0528795029, 31.2484762936),
+          //position of marker
+          infoWindow: InfoWindow(
+            //popup info
+            title: 'محطة مترو العتبة',
+            snippet: 'Al Gomhoreya St., Cairo, Cairo Governorate, Egypt',
+          ),
+          icon: await BitmapDescriptor.fromBytes(markerIcon)));
+      markers.add(Marker(
+        //add third marker
+          markerId: MarkerId("11"),
+          position: LatLng(30.0472253902, 31.2463804933),
+          //position of marker
+          infoWindow: InfoWindow(
+            //popup info
+            title: 'محطه مترو عابدين',
+            snippet: 'محطه مترو محمد نجيب, Cairo, Egypt',
+          ),
+          icon: await BitmapDescriptor.fromBytes(markerIcon)));
+      markers.add(Marker(
+        //add third marker
+          markerId: MarkerId("12"),
+          position: LatLng(30.0361495, 31.2024855501),
+          //position of marker
+          infoWindow: InfoWindow(
+            //popup info
+            title: 'محطه مترو التحرير',
+            snippet: 'القاهره شارع التحرير محطه مترو البحوث',
+          ),
+          icon: await BitmapDescriptor.fromBytes(markerIcon)));
+      markers.add(Marker(
+        //add third marker
+          markerId: MarkerId("13"),
+          position: LatLng(30.0571, 31.2387),
+          //position of marker
+          infoWindow: InfoWindow(
+            //popup info
+            title: 'محطه مترو الاوبرا',
+            snippet: 'دار الأوبرا المصرية, Cairo, Cairo Governorate, Egypt',
+          ),
+          icon: await BitmapDescriptor.fromBytes(markerIcon)));
+    });
+  }
 
   @override
-  void dispose() {
-    _pc;
-    super.dispose();
+  void onMapCreated(GoogleMapController controller) {
+    mapController = controller;
+    setState(() {
+      marker();
+    });
   }
 
-
+  Future<Uint8List> getBytesFromAsset(String path) async {
+    double pixelRatio = MediaQuery
+        .of(context)
+        .devicePixelRatio;
+    ByteData data = await rootBundle.load(path);
+    ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(),
+        targetWidth: pixelRatio.round() * 30);
+    ui.FrameInfo fi = await codec.getNextFrame();
+    return (await fi.image.toByteData(format: ui.ImageByteFormat.png))!
+        .buffer
+        .asUint8List();
+  }
 
   @override
   Widget build(BuildContext context) {
-    var height = MediaQuery.of(context).size.height;
-    var width = MediaQuery.of(context).size.width;
-    return Scaffold(
-        key: _scaffoldKey,
+    FloatingActionBubble floating = FloatingActionBubble(
+      // Menu items
+      items: <Bubble>[
+        // Floating action menu item
+        Bubble(
+          title: "Search Your Destination",
+          iconColor: ColorsHelp.backgroundG,
+          bubbleColor: ColorsHelp.background,
+          icon: Icons.search,
+          titleStyle:
+          TextStyle(fontSize: 16, color: Colors.white),
+          onPress: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (_) => MapLocation()));
+            _animationController.reverse();
+          },
+        ),
+        // Floating action menu item
+        Bubble(
+          title: "Nearest station to me",
+          iconColor: ColorsHelp.backgroundG,
+          bubbleColor: ColorsHelp.background,
+          icon: Icons.near_me,
+          titleStyle:
+          TextStyle(fontSize: 16, color: Colors.white),
+          onPress: () {
+            Navigator.push(context,  MaterialPageRoute(
+                builder: (_) => MapLocation(GetNearStation:2,)));
+            _animationController.reverse();
+          },
+        ),
+        Bubble(
+          title: "Get your location",
+          iconColor: ColorsHelp.backgroundG,
+          bubbleColor: ColorsHelp.background,
+          icon: Icons.my_location,
+          titleStyle:
+          TextStyle(fontSize: 16, color: Colors.white),
+          onPress: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (_) => MapLocation(GetLocation: 1,)));
+            _animationController.reverse();
+          },
+        ),
+        //Floating action menu item
+        Bubble(
+          title: " All Stations",
+          iconColor: ColorsHelp.backgroundG,
+          bubbleColor: ColorsHelp.background,
+          icon: Icons.train,
+          titleStyle:
+          TextStyle(fontSize: 16, color: Colors.white),
+          onPress: () {
+            setState(() {
+              markers;
+            });
+            _animationController.reverse();
+          },
+        ),
 
+        Bubble(
+          title: "Satellite",
+          iconColor: ColorsHelp.backgroundG,
+          bubbleColor: ColorsHelp.background,
+          icon: Icons.satellite_alt,
+          titleStyle:
+          TextStyle(fontSize: 15, color: Colors.white),
+          onPress: () {
+            setState(() {
+              type = MapType.satellite;
+            });
+            _animationController.reverse();
+          },
+        ),
+        Bubble(
+          title: "Map",
+          iconColor: ColorsHelp.backgroundG,
+          bubbleColor: ColorsHelp.background,
+          icon: Icons.map_outlined,
+          titleStyle:
+          TextStyle(fontSize: 15, color: Colors.white),
+          onPress: () {
+            setState(() {
+              type = MapType.normal;
+            });
+            _animationController.reverse();
+          },
+        ),
+      ],
+
+      // animation controller
+      animation: _animation,
+
+      // On pressed change animation state
+      onPress: () =>
+      _animationController.isCompleted
+          ? _animationController.reverse()
+          : _animationController.forward(),
+
+      // Floating Action button Icon color
+      iconColor: ColorsHelp.backgroundG,
+
+      // Flaoting Action button Icon
+      backGroundColor: ColorsHelp.background,
+      animatedIconData: AnimatedIcons.menu_close,
+    );
+
+    var height = MediaQuery
+        .of(context)
+        .size
+        .height;
+    var width = MediaQuery
+        .of(context)
+        .size
+        .width;
+    return Scaffold(
         bottomNavigationBar: BotoomBar(
           index: 2,
         ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
         backgroundColor: const Color(0xffffffff),
-        body:
-        SafeArea(
+        body: SafeArea(
             child: Stack(children: <Widget>[
-          Container(
-            height: height / 0.5,
-            decoration: BoxDecoration(
-              color: const Color(0xff00334a),
-              borderRadius: BorderRadius.only(
-                bottomRight: Radius.circular(30.0),
-                bottomLeft: Radius.circular(30.0),
-              ),
-            ),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
+              Container(
+                height: height / 0.5,
+                decoration: BoxDecoration(
+                  color: const Color(0xff00334a),
+                  borderRadius: BorderRadius.only(
+                    bottomRight: Radius.circular(30.0),
+                    bottomLeft: Radius.circular(30.0),
+                  ),
+                ),
+                child: Column(
                   children: [
-                    Padding(
-                      padding: EdgeInsets.only(right: 10, top: 10),
-                      child: InkWell(
-                        onTap: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (_) => Menu()));
-                        },
-                        child: Image.asset(
-                          "assets/menu.png",
-                          width: 30,
-                          height: 30,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(right: 10, top: 10),
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (_) => Menu()));
+                            },
+                            child: Image.asset(
+                              "assets/menu.png",
+                              width: 30,
+                              height: 30,
+                            ),
+                          ),
                         ),
+                      ],
+                    ),
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (_) => Profile()));
+                      },
+                      child: Person(
+                          high: 120,
+                          width: 120,
+                          color: Colors.white,
+                          color2: ColorsHelp.background,
+                          size: 120,
+                          reduis: 80),
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Text(
+                      'Kamal Magdy ',
+                      style: TextStyle(
+                        fontFamily: 'Montserrat',
+                        fontSize: 25,
+                        color: const Color(0xffffffff),
+                        fontWeight: FontWeight.w700,
+                        height: 1.608695652173913,
                       ),
+                      textHeightBehavior:
+                      TextHeightBehavior(applyHeightToFirstAscent: false),
+                      softWrap: false,
+                    ),
+                    Text(
+                      'Daily ticket',
+                      style: TextStyle(
+                        fontFamily: 'Montserrat',
+                        fontSize: 15,
+                        color: Colors.green,
+                        height: 1.608695652173913,
+                      ),
+                      textHeightBehavior:
+                      TextHeightBehavior(applyHeightToFirstAscent: false),
+                      softWrap: false,
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Text(
+                      'Good Morning kamal :)',
+                      style: TextStyle(
+                        fontFamily: 'Montserrat',
+                        fontSize: 12,
+                        color: Colors.green,
+                        height: 1.608695652173913,
+                      ),
+                      textHeightBehavior:
+                      TextHeightBehavior(applyHeightToFirstAscent: false),
+                      softWrap: false,
+                    ),
+                    Text(
+                      "Where Do You Want \n To Go Today ?",
+                      style: TextStyle(
+                        fontFamily: 'Montserrat',
+                        fontSize: 20,
+                        color: const Color(0xffffffff),
+                        fontWeight: FontWeight.w700,
+                        height: 1.608695652173913,
+                      ),
+                      textAlign: TextAlign.center,
+                      textHeightBehavior:
+                      TextHeightBehavior(applyHeightToFirstAscent: false),
+                      softWrap: false,
                     ),
                   ],
                 ),
-                InkWell(
-                  onTap: () {
-                    Navigator.push(
-                        context, MaterialPageRoute(builder: (_) => Profile()));
-                  },
-                  child: Person(
-                      high: 120,
-                      width: 120,
-                      color: Colors.white,
-                      color2: ColorsHelp.background,
-                      size: 120,
-                      reduis: 80),
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                Text(
-                  'Kamal Magdy ',
-                  style: TextStyle(
-                    fontFamily: 'Montserrat',
-                    fontSize: 25,
-                    color: const Color(0xffffffff),
-                    fontWeight: FontWeight.w700,
-                    height: 1.608695652173913,
-                  ),
-                  textHeightBehavior:
-                      TextHeightBehavior(applyHeightToFirstAscent: false),
-                  softWrap: false,
-                ),
-                Text(
-                  'Daily ticket',
-                  style: TextStyle(
-                    fontFamily: 'Montserrat',
-                    fontSize: 15,
-                    color: Colors.green,
-                    height: 1.608695652173913,
-                  ),
-                  textHeightBehavior:
-                      TextHeightBehavior(applyHeightToFirstAscent: false),
-                  softWrap: false,
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Text(
-                  'Good Morning kamal :)',
-                  style: TextStyle(
-                    fontFamily: 'Montserrat',
-                    fontSize: 12,
-                    color: Colors.green,
-                    height: 1.608695652173913,
-                  ),
-                  textHeightBehavior:
-                      TextHeightBehavior(applyHeightToFirstAscent: false),
-                  softWrap: false,
-                ),
-                Text(
-                  "Where Do You Want \n To Go Today ?",
-                  style: TextStyle(
-                    fontFamily: 'Montserrat',
-                    fontSize: 20,
-                    color: const Color(0xffffffff),
-                    fontWeight: FontWeight.w700,
-                    height: 1.608695652173913,
-                  ),
-                  textAlign: TextAlign.center,
-                  textHeightBehavior:
-                      TextHeightBehavior(applyHeightToFirstAscent: false),
-                  softWrap: false,
-                ),
-              ],
-            ),
-          ),
-          SlidingUpPanel(
-            controller: _pc,
-            minHeight: height * 0.4,
-            maxHeight: height,
-            panel:
+              ),
+              SlidingUpPanel(
+                controller: _pc,
+                minHeight: height * 0.4,
+                maxHeight: height,
+                panel: Stack(
+                  children: [
+                    GoogleMap(
+                        markers: markers,
+                        initialCameraPosition:
+                        CameraPosition(target: center, zoom: 12),
+                        //17 is new zoom level
 
-              Stack(
-                children: [
-
-
-                  GoogleMap(
-                    markers: Set<Marker>.from(markers),
-                    initialCameraPosition: _initialLocation,
-                    myLocationEnabled: true,
-                    myLocationButtonEnabled: false,
-                    mapType: MapType.normal,
-                    zoomGesturesEnabled: true,
-                    zoomControlsEnabled: false,
-                    polylines: Set<Polyline>.of(polylines.values),
-                    onMapCreated: (GoogleMapController controller) {
-                      mapController = controller;
-                    },
-                  ),
-                  // Show zoom buttons
-                  Container(
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 10.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          ClipOval(
-                            child: Material(
-                              color: Colors.blue.shade100, // button color
-                              child: InkWell(
-                                splashColor: Colors.blue, // inkwell color
-                                child: SizedBox(
-                                  width: 50,
-                                  height: 50,
-                                  child: Icon(Icons.add),
+                        myLocationEnabled: true,
+                        myLocationButtonEnabled: false,
+                        mapType: type,
+                        zoomGesturesEnabled: true,
+                        zoomControlsEnabled: false,
+                        rotateGesturesEnabled: false,
+                        polylines: polyline,
+                        onMapCreated: onMapCreated),
+                    // Show zoom buttons
+                    Container(
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 10.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            ClipOval(
+                              child: Material(
+                                color: Colors.blue.shade100, // button color
+                                child: InkWell(
+                                  splashColor: Colors.blue, // inkwell color
+                                  child: SizedBox(
+                                    width: 50,
+                                    height: 50,
+                                    child: Icon(Icons.add),
+                                  ),
+                                  onTap: () {
+                                    mapController.animateCamera(
+                                      CameraUpdate.zoomIn(),
+                                    );
+                                  },
                                 ),
-                                onTap: () {
-                                  mapController.animateCamera(
-                                    CameraUpdate.zoomIn(),
-                                  );
-                                },
                               ),
                             ),
-                          ),
-                          SizedBox(height: 20),
-                          ClipOval(
-                            child: Material(
-                              color: Colors.blue.shade100, // button color
-                              child: InkWell(
-                                splashColor: Colors.blue, // inkwell color
-                                child: SizedBox(
-                                  width: 50,
-                                  height: 50,
-                                  child: Icon(Icons.remove),
+                            SizedBox(height: 20),
+                            ClipOval(
+                              child: Material(
+                                color: Colors.blue.shade100, // button color
+                                child: InkWell(
+                                  splashColor: Colors.blue, // inkwell color
+                                  child: SizedBox(
+                                    width: 50,
+                                    height: 50,
+                                    child: Icon(Icons.remove),
+                                  ),
+                                  onTap: () {
+                                    mapController.animateCamera(
+                                      CameraUpdate.zoomOut(),
+                                    );
+                                  },
                                 ),
-                                onTap: () {
-                                  mapController.animateCamera(
-                                    CameraUpdate.zoomOut(),
-                                  );
-                                },
                               ),
-                            ),
-                          )
-                        ],
+                            )
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  // Show the place input fields & button for
-                  // showing the route
 
-index==1?     // showing the route
-SafeArea(
-  child: Container(
-    alignment: Alignment.topCenter,
-    margin: EdgeInsets.only(top: 80),
-    child: Padding(
-
-      padding: const EdgeInsets.only(top: 10.0),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white70,
-          borderRadius: BorderRadius.all(
-            Radius.circular(20.0),
-          ),
-        ),
-        width: width * 0.9,
-        child: Padding(
-          padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Text(
-                'Starions',
-                style: TextStyle(fontSize: 20.0),
-              ),
-              SizedBox(height: 10),
-              _textField(
-                  label: 'Start',
-                  hint: 'Choose starting point',
-                  prefixIcon: Icon(Icons.looks_one),
-                  suffixIcon: IconButton(
-                    icon: Icon(Icons.my_location),
-                    onPressed: () {
-                      startAddressController.text = _currentAddress;
-                      _startAddress = _currentAddress;
-                    },
-                  ),
-                  controller: startAddressController,
-                  focusNode: startAddressFocusNode,
-                  width: width,
-                  locationCallback: (String value) {
-                    setState(() {
-                      _startAddress = value;
-                    });
-                  }),
-              SizedBox(height: 10),
-              _textField(
-                  label: 'Destination',
-                  hint: 'Choose destination',
-                  prefixIcon: Icon(Icons.looks_two),
-                  controller: destinationAddressController,
-                  focusNode: desrinationAddressFocusNode,
-                  width: width,
-                  locationCallback: (String value) {
-                    setState(() {
-                      _destinationAddress = value;
-                    });
-                  }),
-              SizedBox(height: 10),
-              Visibility(
-                visible: _placeDistance == null ? false : true,
-                child: Text(
-                  'DISTANCE: $_placeDistance km',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              SizedBox(height: 5),
-              ElevatedButton(
-                onPressed: (_startAddress != '' &&
-                    _destinationAddress != '')
-                    ? () async {
-                  startAddressFocusNode.unfocus();
-                  desrinationAddressFocusNode.unfocus();
-                  setState(() {
-                    if (markers.isNotEmpty) markers.clear();
-                    if (polylines.isNotEmpty)
-                      polylines.clear();
-                    if (polylineCoordinates.isNotEmpty)
-                      polylineCoordinates.clear();
-                    _placeDistance = null;
-                  });
-
-                  _calculateDistance().then((isCalculated) {
-                    if (isCalculated) {
-                      ScaffoldMessenger.of(context)
-                          .showSnackBar(
-                        SnackBar(
-                          content: Text(
-                              'Distance Calculated Sucessfully'),
+                    Container(
+                      margin: EdgeInsets.only(top: 80),
+                      height: 190,
+                      child: Container(
+                        margin: EdgeInsets.all(30),
+                        decoration: BoxDecoration(
+                          color: const Color(0xbfffffff),
+                          borderRadius: BorderRadius.circular(12.0),
+                          border: Border.all(
+                              width: 1.0, color: const Color(0xbf00334a)),
+                          boxShadow: [
+                            BoxShadow(
+                              color: const Color(0x1f000000),
+                              offset: Offset(0, 3),
+                              blurRadius: 6,
+                            ),
+                          ],
                         ),
-                      );
-                    } else {
-                      ScaffoldMessenger.of(context)
-                          .showSnackBar(
-                        SnackBar(
-                          content: Text(
-                              'Error Calculating Distance'),
-                        ),
-                      );
-                    }
-                  });
-                }
-                    : null,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    'Show Route'.toUpperCase(),
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20.0,
-                    ),
-                  ),
-                ),
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.red,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20.0),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    ),
-  ),
-):
-                      Container(
-                        margin: EdgeInsets.only(top: 80),
-height: 190,
-                        child: Container(
-                          padding: EdgeInsets.only(top: 20),
-                          height: 100,
-                          margin: EdgeInsets.all(30),
-                          decoration: BoxDecoration(
-                            color: const Color(0xbfffffff),
-                            borderRadius: BorderRadius.circular(12.0),
-                            border: Border.all(
-                                width: 1.0, color: const Color(0xbf00334a)),
-                            boxShadow: [
-                              BoxShadow(
-                                color: const Color(0x1f000000),
-                                offset: Offset(0, 3),
-                                blurRadius: 6,
+                        child: Row(
+                          children: [
+                            Container(
+                              padding: EdgeInsets.only(left: 10, top: 5),
+                              child: Column(
+                                children: [
+                                  SizedBox(
+                                    height: 7,
+                                  ),
+                                  Container(
+                                    height: 15,
+                                    width: 15,
+                                    decoration: BoxDecoration(
+                                        color: ColorsHelp.background,
+                                        borderRadius: BorderRadius.circular(
+                                            20)),
+                                  ),
+                                  Container(
+                                    height: 5,
+                                    width: 2,
+                                    decoration: BoxDecoration(
+                                        color: ColorsHelp.background,
+                                        borderRadius: BorderRadius.circular(
+                                            20)),
+                                  ),
+                                  Container(
+                                    height: 5,
+                                    width: 2,
+                                    decoration: BoxDecoration(
+                                        color: ColorsHelp.background,
+                                        borderRadius: BorderRadius.circular(
+                                            20)),
+                                  ),
+                                  Container(
+                                    height: 5,
+                                    width: 2,
+                                    decoration: BoxDecoration(
+                                        color: ColorsHelp.background,
+                                        borderRadius: BorderRadius.circular(
+                                            20)),
+                                  ),
+                                  Container(
+                                    height: 5,
+                                    width: 2,
+                                    decoration: BoxDecoration(
+                                        color: ColorsHelp.background,
+                                        borderRadius: BorderRadius.circular(
+                                            20)),
+                                  ),
+                                  Container(
+                                    height: 5,
+                                    width: 2,
+                                    decoration: BoxDecoration(
+                                        color: ColorsHelp.background,
+                                        borderRadius: BorderRadius.circular(
+                                            20)),
+                                  ),
+                                  Container(
+                                    height: 5,
+                                    width: 2,
+                                    decoration: BoxDecoration(
+                                        color: ColorsHelp.background,
+                                        borderRadius: BorderRadius.circular(
+                                            20)),
+                                  ),
+                                  Container(
+                                    height: 5,
+                                    width: 2,
+                                    decoration: BoxDecoration(
+                                        color: ColorsHelp.background,
+                                        borderRadius: BorderRadius.circular(
+                                            20)),
+                                  ),
+                                  Container(
+                                    height: 5,
+                                    width: 2,
+                                    decoration: BoxDecoration(
+                                        color: ColorsHelp.background,
+                                        borderRadius: BorderRadius.circular(
+                                            20)),
+                                  ),
+                                  Container(
+                                    height: 5,
+                                    width: 2,
+                                    decoration: BoxDecoration(
+                                        color: ColorsHelp.background,
+                                        borderRadius: BorderRadius.circular(
+                                            20)),
+                                  ),
+                                  Container(
+                                    height: 5,
+                                    width: 2,
+                                    decoration: BoxDecoration(
+                                        color: ColorsHelp.background,
+                                        borderRadius: BorderRadius.circular(
+                                            20)),
+                                  ),
+                                  Container(
+                                    height: 5,
+                                    width: 2,
+                                    decoration: BoxDecoration(
+                                        color: ColorsHelp.background,
+                                        borderRadius: BorderRadius.circular(
+                                            20)),
+                                  ),
+                                  Container(
+                                    height: 5,
+                                    width: 2,
+                                    decoration: BoxDecoration(
+                                        color: ColorsHelp.background,
+                                        borderRadius: BorderRadius.circular(
+                                            20)),
+                                  ),
+                                  Container(
+                                    height: 5,
+                                    width: 2,
+                                    decoration: BoxDecoration(
+                                        color: ColorsHelp.background,
+                                        borderRadius: BorderRadius.circular(
+                                            20)),
+                                  ),
+                                  Container(
+                                    height: 5,
+                                    width: 2,
+                                    decoration: BoxDecoration(
+                                        color: ColorsHelp.background,
+                                        borderRadius: BorderRadius.circular(
+                                            20)),
+                                  ),
+                                  Container(
+                                    height: 5,
+                                    width: 2,
+                                    decoration: BoxDecoration(
+                                        color: ColorsHelp.background,
+                                        borderRadius: BorderRadius.circular(
+                                            20)),
+                                  ),
+                                  Container(
+                                    height: 15,
+                                    width: 15,
+                                    decoration: BoxDecoration(
+                                        color: ColorsHelp.background,
+                                        borderRadius: BorderRadius.circular(
+                                            20)),
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Container(
-                                padding: EdgeInsets.only(left: 10),
-                                child: Column(
+                            ),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     SizedBox(
-                                      height: 7,
+                                      width: 10,
                                     ),
-                                    Container(
-                                      height: 15,
-                                      width: 15,
-                                      decoration: BoxDecoration(
+                                    GestureDetector(
+                                      child: Text(
+                                        "From Station",
+                                        style:
+                                        TextStyle(color: ColorsHelp.background),
+                                      ),
+                                      onTap: () {
+                                        _pc.open();
+                                        showAnimatedDialog(
+                                          context: context,
+                                          barrierDismissible: true,
+                                          builder: (BuildContext context) {
+                                            return Align(
+                                              alignment: Alignment.center,
+                                              child: Container(
+                                                  decoration: BoxDecoration(
+                                                      color: Colors.white,
+                                                      borderRadius:
+                                                      BorderRadius.circular(20),
+                                                      boxShadow: [
+                                                        BoxShadow(
+                                                            offset: Offset(
+                                                                1, 4),
+                                                            color: Colors.grey,
+                                                            blurRadius: 3)
+                                                      ]),
+                                                  height: 120,
+                                                  width: 300,
+                                                  child: Column(
+                                                      mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceAround,
+                                                      children: [
+                                                        Row(
+                                                          mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceAround,
+                                                          children: [
+                                                            Container(
+                                                              height: 35,
+                                                              width: 120,
+                                                              decoration: BoxDecoration(
+                                                                  color: ColorsHelp
+                                                                      .background,
+                                                                  borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                      20)),
+                                                              child:
+                                                              GestureDetector(
+                                                                child: Center(
+                                                                  child: Text(
+                                                                    "First Line",
+                                                                    style: TextStyle(
+                                                                        fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                        fontSize:
+                                                                        10,
+                                                                        color: Colors
+                                                                            .white,
+                                                                        decoration:
+                                                                        TextDecoration
+                                                                            .none),
+                                                                  ),
+                                                                ),
+                                                                onTap: () {
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                  showAnimatedDialog(
+                                                                    context:
+                                                                    context,
+                                                                    barrierDismissible:
+                                                                    true,
+                                                                    builder:
+                                                                        (
+                                                                        BuildContext
+                                                                        context) {
+                                                                      return Align(
+                                                                          alignment:
+                                                                          Alignment(
+                                                                              0,
+                                                                              0.4),
+                                                                          child:
+                                                                          Container(
+                                                                            padding:
+                                                                            EdgeInsets
+                                                                                .only(
+                                                                                left: 20),
+                                                                            decoration: BoxDecoration(
+                                                                                color: Colors
+                                                                                    .white
+                                                                                    .withOpacity(
+                                                                                    0.8),
+                                                                                borderRadius: BorderRadius
+                                                                                    .only(
+                                                                                  topRight: Radius
+                                                                                      .circular(
+                                                                                      130),
+                                                                                  topLeft: Radius
+                                                                                      .circular(
+                                                                                      130),
+                                                                                )),
+                                                                            width:
+                                                                            300,
+                                                                            height:
+                                                                            400,
+                                                                            child: LineStation(
+                                                                                Text1:
+                                                                                "Helwan",
+                                                                                Text2:
+                                                                                "Ain Helwan",
+                                                                                Text3:
+                                                                                "Helwan University",
+                                                                                Text4:
+                                                                                "Wadi Hof",
+                                                                                Text5:
+                                                                                "Hadayek Helwan",
+                                                                                Text6:
+                                                                                "El_Maasara",
+                                                                                Text7:
+                                                                                "Tora El_Asmant",
+                                                                                Text8:
+                                                                                "Kozzika",
+                                                                                Text9:
+                                                                                "Tora El_Balad",
+                                                                                Text10:
+                                                                                "Sakanat El_maadi",
+                                                                                Text11:
+                                                                                "Maddi",
+                                                                                Text12:
+                                                                                "Hadayek El_Maadi",
+                                                                                Text13:
+                                                                                "Dar El_Salam"),
+                                                                          ));
+                                                                    },
+                                                                    animationType:
+                                                                    DialogTransitionType
+                                                                        .slideFromBottomFade,
+                                                                    curve: Curves
+                                                                        .fastOutSlowIn,
+                                                                    duration:
+                                                                    Duration(
+                                                                        seconds:
+                                                                        2),
+                                                                  );
+                                                                },
+                                                              ),
+                                                            ),
+                                                            Container(
+                                                              height: 35,
+                                                              width: 120,
+                                                              decoration: BoxDecoration(
+                                                                  color: ColorsHelp
+                                                                      .background,
+                                                                  borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                      20)),
+                                                              child:
+                                                              GestureDetector(
+                                                                child: Center(
+                                                                    child: Text(
+                                                                      "Second Line",
+                                                                      style: TextStyle(
+                                                                          fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                          fontSize: 10,
+                                                                          color: Colors
+                                                                              .white,
+                                                                          decoration:
+                                                                          TextDecoration
+                                                                              .none),
+                                                                    )),
+                                                                onTap: () {},
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        Row(
+                                                          mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceAround,
+                                                          children: [
+                                                            Container(
+                                                              height: 35,
+                                                              width: 120,
+                                                              decoration: BoxDecoration(
+                                                                  color: ColorsHelp
+                                                                      .background,
+                                                                  borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                      20)),
+                                                              child:
+                                                              GestureDetector(
+                                                                child: Center(
+                                                                  child: Text(
+                                                                    "Third Line",
+                                                                    style: TextStyle(
+                                                                        fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                        fontSize:
+                                                                        10,
+                                                                        color: Colors
+                                                                            .white,
+                                                                        decoration:
+                                                                        TextDecoration
+                                                                            .none),
+                                                                  ),
+                                                                ),
+                                                                onTap: () {},
+                                                              ),
+                                                            ),
+                                                            Container(
+                                                              height: 35,
+                                                              width: 120,
+                                                            ),
+                                                          ],
+                                                        )
+                                                      ])),
+                                            );
+                                          },
+                                          animationType: DialogTransitionType
+                                              .size,
+                                          curve: Curves.fastOutSlowIn,
+                                          duration: Duration(seconds: 1),
+                                        );
+                                      },
+                                    ),
+                                    SizedBox(
+                                      width: 100,
+                                    ),
+                                    IconButton(
+                                        onPressed: () {},
+                                        icon: Icon(
+                                          Icons.my_location,
                                           color: ColorsHelp.background,
-                                          borderRadius: BorderRadius.circular(20)),
-                                    ),
-                                    Container(
-                                      height: 5,
-                                      width: 2,
-                                      decoration: BoxDecoration(
-                                          color: ColorsHelp.background,
-                                          borderRadius: BorderRadius.circular(20)),
-                                    ),
-                                    Container(
-                                      height: 5,
-                                      width: 2,
-                                      decoration: BoxDecoration(
-                                          color: ColorsHelp.background,
-                                          borderRadius: BorderRadius.circular(20)),
-                                    ),
-                                    Container(
-                                      height: 5,
-                                      width: 2,
-                                      decoration: BoxDecoration(
-                                          color: ColorsHelp.background,
-                                          borderRadius: BorderRadius.circular(20)),
-                                    ),
-                                    Container(
-                                      height: 5,
-                                      width: 2,
-                                      decoration: BoxDecoration(
-                                          color: ColorsHelp.background,
-                                          borderRadius: BorderRadius.circular(20)),
-                                    ),
-                                    Container(
-                                      height: 5,
-                                      width: 2,
-                                      decoration: BoxDecoration(
-                                          color: ColorsHelp.background,
-                                          borderRadius: BorderRadius.circular(20)),
-                                    ),
-                                    Container(
-                                      height: 5,
-                                      width: 2,
-                                      decoration: BoxDecoration(
-                                          color: ColorsHelp.background,
-                                          borderRadius: BorderRadius.circular(20)),
-                                    ),
-                                    Container(
-                                      height: 5,
-                                      width: 2,
-                                      decoration: BoxDecoration(
-                                          color: ColorsHelp.background,
-                                          borderRadius: BorderRadius.circular(20)),
-                                    ),
-                                    Container(
-                                      height: 5,
-                                      width: 2,
-                                      decoration: BoxDecoration(
-                                          color: ColorsHelp.background,
-                                          borderRadius: BorderRadius.circular(20)),
-                                    ),
-                                    Container(
-                                      height: 5,
-                                      width: 2,
-                                      decoration: BoxDecoration(
-                                          color: ColorsHelp.background,
-                                          borderRadius: BorderRadius.circular(20)),
-                                    ),
-                                    Container(
-                                      height: 15,
-                                      width: 15,
-                                      decoration: BoxDecoration(
-                                          color: ColorsHelp.background,
-                                          borderRadius: BorderRadius.circular(20)),
-                                    ),
+                                        ))
                                   ],
                                 ),
-                              ),
-                              Column(
-                                children: [
-                                  Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      SizedBox(
-                                        width: 10,
+                                Container(
+                                  width: 250,
+                                  height: 3,
+                                  color: ColorsHelp.background,
+                                ),
+                                SizedBox(
+                                  height: 25,
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    GestureDetector(
+                                      child: Text(
+                                        "To Station",
+                                        style:
+                                        TextStyle(color: ColorsHelp.background),
                                       ),
-                                      GestureDetector(
-                                        child: Text(
-                                          "From Station",
-                                          style: TextStyle(
-                                              color: ColorsHelp.background),
-                                        ),
-                                        onTap: () {
-                                          _pc.open();
-                                          showAnimatedDialog(
-                                            context: context,
-                                            barrierDismissible: true,
-                                            builder: (BuildContext context) {
-                                              return Align(
-                                                alignment: Alignment.center,
-                                                child: Container(
-                                                    decoration: BoxDecoration(
-                                                        color: Colors.white,
-                                                        borderRadius:
-                                                        BorderRadius.circular(
-                                                            20),
-                                                        boxShadow: [
-                                                          BoxShadow(
-                                                              offset: Offset(1, 4),
-                                                              color: Colors.grey,
-                                                              blurRadius: 3)
-                                                        ]),
-                                                    height: 120,
-                                                    width: 300,
-                                                    child: Column(
-                                                        mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceAround,
-                                                        children: [
-                                                          Row(
-                                                            mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceAround,
-                                                            children: [
-                                                              Container(
-                                                                height: 35,
-                                                                width: 120,
-                                                                decoration: BoxDecoration(
-                                                                    color: ColorsHelp
-                                                                        .background,
-                                                                    borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                        20)),
-                                                                child:
-                                                                GestureDetector(
-                                                                  child: Center(
-                                                                    child: Text(
-                                                                      "First Line",
-                                                                      style: TextStyle(
-                                                                          fontWeight:
-                                                                          FontWeight
-                                                                              .bold,
-                                                                          fontSize:
-                                                                          10,
-                                                                          color: Colors
-                                                                              .white,
-                                                                          decoration:
-                                                                          TextDecoration
-                                                                              .none),
-                                                                    ),
+                                      onTap: () {
+                                        _pc.open();
+                                        showAnimatedDialog(
+                                          context: context,
+                                          barrierDismissible: true,
+                                          builder: (BuildContext context) {
+                                            return Align(
+                                              alignment: Alignment.center,
+                                              child: Container(
+                                                  decoration: BoxDecoration(
+                                                      color: Colors.white,
+                                                      borderRadius:
+                                                      BorderRadius.circular(20),
+                                                      boxShadow: [
+                                                        BoxShadow(
+                                                            offset: Offset(
+                                                                1, 4),
+                                                            color: Colors.grey,
+                                                            blurRadius: 3)
+                                                      ]),
+                                                  height: 120,
+                                                  width: 300,
+                                                  child: Column(
+                                                      mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceAround,
+                                                      children: [
+                                                        Row(
+                                                          mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceAround,
+                                                          children: [
+                                                            Container(
+                                                              height: 35,
+                                                              width: 120,
+                                                              decoration: BoxDecoration(
+                                                                  color: ColorsHelp
+                                                                      .background,
+                                                                  borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                      20)),
+                                                              child:
+                                                              GestureDetector(
+                                                                child: Center(
+                                                                  child: Text(
+                                                                    "First Line",
+                                                                    style: TextStyle(
+                                                                        fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                        fontSize:
+                                                                        10,
+                                                                        color: Colors
+                                                                            .white,
+                                                                        decoration:
+                                                                        TextDecoration
+                                                                            .none),
                                                                   ),
-                                                                  onTap: () {
-                                                                    Navigator.pop(
-                                                                        context);
-                                                                    showAnimatedDialog(
-                                                                      context:
-                                                                      context,
-                                                                      barrierDismissible:
-                                                                      true,
-                                                                      builder:
-                                                                          (BuildContext
-                                                                      context) {
-                                                                        return Align(
-                                                                            alignment: Alignment(
-                                                                                0,
-                                                                                0.4),
-                                                                            child:
-                                                                            Container(
-                                                                              padding:
-                                                                              EdgeInsets.only(left: 20),
-                                                                              decoration: BoxDecoration(
-                                                                                  color: Colors.white.withOpacity(0.6),
-                                                                                  borderRadius: BorderRadius.circular(20)),
-                                                                              width:
-                                                                              300,
-                                                                              height:
-                                                                              400,
-                                                                              child: LineStation(
-                                                                                  Text1: "Helwan",
-                                                                                  Text2: "Ain Helwan",
-                                                                                  Text3: "Helwan University",
-                                                                                  Text4: "Wadi Hof",
-                                                                                  Text5: "Hadayek Helwan",
-                                                                                  Text6: "El_Maasara",
-                                                                                  Text7: "Tora El_Asmant",
-                                                                                  Text8: "Kozzika",
-                                                                                  Text9: "Tora El_Balad",
-                                                                                  Text10: "Sakanat El_maadi",
-                                                                                  Text11: "Maddi",
-                                                                                  Text12: "Hadayek El_Maadi",
-                                                                                  Text13: "Dar El_Salam"),
-                                                                            ));
-                                                                      },
-                                                                      animationType:
-                                                                      DialogTransitionType
-                                                                          .slideFromBottomFade,
-                                                                      curve: Curves
-                                                                          .fastOutSlowIn,
-                                                                      duration:
-                                                                      Duration(
-                                                                          seconds:
-                                                                          2),
-                                                                    );
-                                                                  },
                                                                 ),
-                                                              ),
-                                                              Container(
-                                                                height: 35,
-                                                                width: 120,
-                                                                decoration: BoxDecoration(
-                                                                    color: ColorsHelp
-                                                                        .background,
-                                                                    borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                        20)),
-                                                                child:
-                                                                GestureDetector(
-                                                                  child: Center(
-                                                                      child: Text(
-                                                                        "Second Line",
-                                                                        style: TextStyle(
-                                                                            fontWeight:
-                                                                            FontWeight
-                                                                                .bold,
-                                                                            fontSize:
-                                                                            10,
-                                                                            color: Colors
-                                                                                .white,
-                                                                            decoration:
-                                                                            TextDecoration
-                                                                                .none),
-                                                                      )),
-                                                                  onTap: () {},
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                          Row(
-                                                            mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceAround,
-                                                            children: [
-                                                              Container(
-                                                                height: 35,
-                                                                width: 120,
-                                                                decoration: BoxDecoration(
-                                                                    color: ColorsHelp
-                                                                        .background,
-                                                                    borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                        20)),
-                                                                child:
-                                                                GestureDetector(
-                                                                  child: Center(
-                                                                    child: Text(
-                                                                      "Third Line",
-                                                                      style: TextStyle(
-                                                                          fontWeight:
-                                                                          FontWeight
-                                                                              .bold,
-                                                                          fontSize:
-                                                                          10,
-                                                                          color: Colors
-                                                                              .white,
-                                                                          decoration:
-                                                                          TextDecoration
-                                                                              .none),
-                                                                    ),
-                                                                  ),
-                                                                  onTap: () {},
-                                                                ),
-                                                              ),
-                                                              Container(
-                                                                height: 35,
-                                                                width: 120,
-                                                              ),
-                                                            ],
-                                                          )
-                                                        ])),
-                                              );
-                                            },
-                                            animationType:
-                                            DialogTransitionType.size,
-                                            curve: Curves.fastOutSlowIn,
-                                            duration: Duration(seconds: 1),
-                                          );
-                                        },
-                                      ),
-                                      SizedBox(
-                                        width: 100,
-                                      ),
-                                      IconButton(
-                                          onPressed: () {
-
-                                            _getCurrentLocation();
-                                          },
-                                          icon: Icon(
-                                            Icons.my_location,
-                                            color: ColorsHelp.background,
-                                          ))
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      Column(
-                                        children: [
-                                          Container(
-                                            width: 250,
-                                            height: 3,
-                                            color: ColorsHelp.background,
-                                          ),
-                                          SizedBox(
-                                            height: 25,
-                                          ),
-                                          GestureDetector(
-                                            child: Text(
-                                              "To Station",
-                                              style: TextStyle(
-                                                  color: ColorsHelp.background),
-                                            ),
-                                            onTap: () {
-                                              _pc.open();
-                                              showAnimatedDialog(
-                                                context: context,
-                                                barrierDismissible: true,
-                                                builder: (BuildContext context) {
-                                                  return Align(
-                                                    alignment: Alignment.center,
-                                                    child: Container(
-                                                        decoration: BoxDecoration(
-                                                            color: Colors.white,
-                                                            borderRadius:
-                                                            BorderRadius
-                                                                .circular(20),
-                                                            boxShadow: [
-                                                              BoxShadow(
-                                                                  offset:
-                                                                  Offset(1, 4),
-                                                                  color:
-                                                                  Colors.grey,
-                                                                  blurRadius: 3)
-                                                            ]),
-                                                        height: 120,
-                                                        width: 300,
-                                                        child: Column(
-                                                            mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceAround,
-                                                            children: [
-                                                              Row(
-                                                                mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .spaceAround,
-                                                                children: [
-                                                                  Container(
-                                                                    height: 35,
-                                                                    width: 120,
-                                                                    decoration: BoxDecoration(
-                                                                        color: ColorsHelp
-                                                                            .background,
-                                                                        borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            20)),
-                                                                    child:
-                                                                    GestureDetector(
-                                                                      child: Center(
-                                                                        child: Text(
-                                                                          "First Line",
-                                                                          style: TextStyle(
-                                                                              fontWeight: FontWeight
-                                                                                  .bold,
-                                                                              fontSize:
-                                                                              10,
-                                                                              color: Colors
-                                                                                  .white,
-                                                                              decoration:
-                                                                              TextDecoration.none),
-                                                                        ),
-                                                                      ),
-                                                                      onTap: () {
-                                                                        Navigator.pop(
-                                                                            context);
-                                                                        showAnimatedDialog(
-                                                                          context:
-                                                                          context,
-                                                                          barrierDismissible:
-                                                                          true,
-                                                                          builder:
-                                                                              (BuildContext
-                                                                          context) {
-                                                                            return Align(
-                                                                                alignment: Alignment(0,
-                                                                                    0.4),
-                                                                                child:
-                                                                                Container(
-                                                                                  padding: EdgeInsets.only(left: 20),
-                                                                                  decoration: BoxDecoration(color: Colors.white.withOpacity(0.6), borderRadius: BorderRadius.circular(20)),
-                                                                                  width: 300,
-                                                                                  height: 400,
-                                                                                  child: LineStation(Text1: "Helwan", Text2: "Ain Helwan", Text3: "Helwan University", Text4: "Wadi Hof", Text5: "Hadayek Helwan", Text6: "El_Maasara", Text7: "Tora El_Asmant", Text8: "Kozzika", Text9: "Tora El_Balad", Text10: "Sakanat El_maadi", Text11: "Maddi", Text12: "Hadayek El_Maadi", Text13: "Dar El_Salam"),
-                                                                                ));
-                                                                          },
-                                                                          animationType:
-                                                                          DialogTransitionType
-                                                                              .slideFromBottomFade,
-                                                                          curve: Curves
-                                                                              .fastOutSlowIn,
-                                                                          duration: Duration(
-                                                                              seconds:
-                                                                              2),
-                                                                        );
-                                                                      },
-                                                                    ),
-                                                                  ),
-                                                                  Container(
-                                                                    height: 35,
-                                                                    width: 120,
-                                                                    decoration: BoxDecoration(
-                                                                        color: ColorsHelp
-                                                                            .background,
-                                                                        borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            20)),
-                                                                    child:
-                                                                    GestureDetector(
-                                                                      child: Center(
+                                                                onTap: () {
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                  showAnimatedDialog(
+                                                                    context:
+                                                                    context,
+                                                                    barrierDismissible:
+                                                                    true,
+                                                                    builder:
+                                                                        (
+                                                                        BuildContext
+                                                                        context) {
+                                                                      return Align(
+                                                                          alignment:
+                                                                          Alignment(
+                                                                              0,
+                                                                              0.4),
                                                                           child:
-                                                                          Text(
-                                                                            "Second Line",
-                                                                            style: TextStyle(
-                                                                                fontWeight:
-                                                                                FontWeight
-                                                                                    .bold,
-                                                                                fontSize:
-                                                                                10,
+                                                                          Container(
+                                                                            padding:
+                                                                            EdgeInsets
+                                                                                .only(
+                                                                                left: 20),
+                                                                            decoration: BoxDecoration(
                                                                                 color: Colors
-                                                                                    .white,
-                                                                                decoration:
-                                                                                TextDecoration.none),
-                                                                          )),
-                                                                      onTap: () {},
-                                                                    ),
-                                                                  ),
-                                                                ],
+                                                                                    .white
+                                                                                    .withOpacity(
+                                                                                    0.8),
+                                                                                borderRadius: BorderRadius
+                                                                                    .only(
+                                                                                  topRight: Radius
+                                                                                      .circular(
+                                                                                      130),
+                                                                                  topLeft: Radius
+                                                                                      .circular(
+                                                                                      130),
+                                                                                )),
+                                                                            width:
+                                                                            300,
+                                                                            height:
+                                                                            400,
+                                                                            child: LineStation(
+                                                                                Text1:
+                                                                                "Helwan",
+                                                                                Text2:
+                                                                                "Ain Helwan",
+                                                                                Text3:
+                                                                                "Helwan University",
+                                                                                Text4:
+                                                                                "Wadi Hof",
+                                                                                Text5:
+                                                                                "Hadayek Helwan",
+                                                                                Text6:
+                                                                                "El_Maasara",
+                                                                                Text7:
+                                                                                "Tora El_Asmant",
+                                                                                Text8:
+                                                                                "Kozzika",
+                                                                                Text9:
+                                                                                "Tora El_Balad",
+                                                                                Text10:
+                                                                                "Sakanat El_maadi",
+                                                                                Text11:
+                                                                                "Maddi",
+                                                                                Text12:
+                                                                                "Hadayek El_Maadi",
+                                                                                Text13:
+                                                                                "Dar El_Salam"),
+                                                                          ));
+                                                                    },
+                                                                    animationType:
+                                                                    DialogTransitionType
+                                                                        .slideFromBottomFade,
+                                                                    curve: Curves
+                                                                        .fastOutSlowIn,
+                                                                    duration:
+                                                                    Duration(
+                                                                        seconds:
+                                                                        2),
+                                                                  );
+                                                                },
                                                               ),
-                                                              Row(
-                                                                mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .spaceAround,
-                                                                children: [
-                                                                  Container(
-                                                                    height: 35,
-                                                                    width: 120,
-                                                                    decoration: BoxDecoration(
-                                                                        color: ColorsHelp
-                                                                            .background,
-                                                                        borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            20)),
-                                                                    child:
-                                                                    GestureDetector(
-                                                                      child: Center(
-                                                                        child: Text(
-                                                                          "Third Line",
-                                                                          style: TextStyle(
-                                                                              fontWeight: FontWeight
-                                                                                  .bold,
-                                                                              fontSize:
-                                                                              10,
-                                                                              color: Colors
-                                                                                  .white,
-                                                                              decoration:
-                                                                              TextDecoration.none),
-                                                                        ),
-                                                                      ),
-                                                                      onTap: () {},
-                                                                    ),
+                                                            ),
+                                                            Container(
+                                                              height: 35,
+                                                              width: 120,
+                                                              decoration: BoxDecoration(
+                                                                  color: ColorsHelp
+                                                                      .background,
+                                                                  borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                      20)),
+                                                              child:
+                                                              GestureDetector(
+                                                                child: Center(
+                                                                    child: Text(
+                                                                      "Second Line",
+                                                                      style: TextStyle(
+                                                                          fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                          fontSize: 10,
+                                                                          color: Colors
+                                                                              .white,
+                                                                          decoration:
+                                                                          TextDecoration
+                                                                              .none),
+                                                                    )),
+                                                                onTap: () {},
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        Row(
+                                                          mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceAround,
+                                                          children: [
+                                                            Container(
+                                                              height: 35,
+                                                              width: 120,
+                                                              decoration: BoxDecoration(
+                                                                  color: ColorsHelp
+                                                                      .background,
+                                                                  borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                      20)),
+                                                              child:
+                                                              GestureDetector(
+                                                                child: Center(
+                                                                  child: Text(
+                                                                    "Third Line",
+                                                                    style: TextStyle(
+                                                                        fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                        fontSize:
+                                                                        10,
+                                                                        color: Colors
+                                                                            .white,
+                                                                        decoration:
+                                                                        TextDecoration
+                                                                            .none),
                                                                   ),
-                                                                  Container(
-                                                                    height: 35,
-                                                                    width: 120,
-                                                                  ),
-                                                                ],
-                                                              )
-                                                            ])),
-                                                  );
-                                                },
-                                                animationType:
-                                                DialogTransitionType.size,
-                                                curve: Curves.fastOutSlowIn,
-                                                duration: Duration(seconds: 1),
-                                              );
-                                            },
-                                          )
-                                        ],
+                                                                ),
+                                                                onTap: () {},
+                                                              ),
+                                                            ),
+                                                            Container(
+                                                              height: 35,
+                                                              width: 120,
+                                                            ),
+                                                          ],
+                                                        )
+                                                      ])),
+                                            );
+                                          },
+                                          animationType: DialogTransitionType
+                                              .size,
+                                          curve: Curves.fastOutSlowIn,
+                                          duration: Duration(seconds: 1),
+                                        );
+                                      },
+                                    )
+                                  ],
+                                )
+                              ],
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
 
-                                      )
-                                    ],
-                                  )
+                    // Show current location button
+
+                    Align(
+                      alignment: Alignment.topCenter,
+                      child: Container(
+                          height: MediaQuery
+                              .of(context)
+                              .size
+                              .height * 0.1,
+                          width: MediaQuery
+                              .of(context)
+                              .size
+                              .width,
+                          decoration: BoxDecoration(
+                              color: ColorsHelp.background,
+                              borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(30),
+                                  bottomRight: Radius.circular(30))),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  IconButton(
+                                      onPressed: () {
+                                        _pc.close();
+                                      },
+                                      icon: Icon(
+                                        Icons.arrow_back_ios,
+                                        color: ColorsHelp.backgroundG,
+                                        size: 30,
+                                      )),
+                                  Text(
+                                    "Booking Tickets",
+                                    style: TextStyle(
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white),
+                                  ),
                                 ],
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(right: 15),
+                                child: GestureDetector(
+                                  child: Person(
+                                      high: 50,
+                                      width: 50,
+                                      color: Colors.white,
+                                      color2: ColorsHelp.background,
+                                      size: 40,
+                                      reduis: 40),
+                                ),
                               )
                             ],
-                          ),
+                          )),
+                    ),
+
+                    Align(
+                        alignment: Alignment(1, 0.3),
+                        child: Container(
+                          child: floating,
+                        )),
+                  ],
+                ),
+                collapsed: Column(
+                  children: [
+                    Container(
+                      height: 100,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                            width: 0, color: ColorsHelp.background),
+                        color: const Color(0xff00334a),
+                        borderRadius: BorderRadius.only(
+                          bottomRight: Radius.circular(30.0),
+                          bottomLeft: Radius.circular(30.0),
                         ),
                       ),
-
-
-
-
-                  // Show current location button
-                  SafeArea(
-                    child: Align(
-                      alignment: Alignment.bottomRight,
-                      child: Padding(
-                        padding: const EdgeInsets.only(right: 10.0, bottom: 10.0),
-                        child: ClipOval(
-                          child: Material(
-                            color: Colors.orange.shade100, // button color
-                            child: InkWell(
-                              splashColor: Colors.orange, // inkwell color
-                              child: SizedBox(
-                                width: 56,
-                                height: 56,
-                                child: Icon(Icons.my_location),
-                              ),
-                              onTap: () {
-
-                                    mapController.animateCamera(
-                                  CameraUpdate.newCameraPosition(
-                                    CameraPosition(
-                                      target: LatLng(
-                                        _currentPosition.latitude,
-                                        _currentPosition.longitude,
-                                      ),
-                                      zoom: 18.0,
-                                    ),
-                                  ),
-                                );
-
-                              // setState(() {
-                              //   getLocation();
-                              // });
-                              },
-                            ),
-                          ),
+                      child: Center(
+                        child: Container(
+                          height: 10,
+                          width: 80,
+                          color: Colors.green,
                         ),
                       ),
                     ),
-                  ),
-                  Align(
-                    alignment: Alignment.topCenter,
-                    child: AppBarr(text: "Booking Ticket",),
-                  ),
-
-Align(alignment:Alignment(1,0.6),child:                   FloatingActionButton(onPressed: (){
-  if(index==0)
-  setState(() {
-  index=1;
-
-});
- else
-   setState(() {
-     index =0;
-   });
-
-
-  },child:index==0? Icon(Icons.search):Icon(Icons.select_all)),
-    ),
-                  Align(alignment:Alignment(1,0.4),child:                   FloatingActionButton(onPressed: (){
-
-setState(() {
-  _getCurrentLocation();
-});
-
-                  },child:Icon(Icons.my_location)),
-                  )
-
-                ],
-              ),
-
-            collapsed: Column(
-              children: [
-                Container(
-                  height: 100,
-                  decoration: BoxDecoration(
-                    border: Border.all(width: 0, color: ColorsHelp.background),
-                    color: const Color(0xff00334a),
-                    borderRadius: BorderRadius.only(
-                      bottomRight: Radius.circular(30.0),
-                      bottomLeft: Radius.circular(30.0),
-                    ),
-                  ),
-                  child: Center(
-                    child: Container(
+                    SizedBox(
                       height: 10,
-                      width: 80,
-                      color: Colors.green,
                     ),
-                  ),
+                  ],
                 ),
-                SizedBox(
-                  height: 10,
-                ),
-              ],
-            ),
-          ),
-        ])));
+              ),
+            ])));
   }
-
-
 }

@@ -32,13 +32,7 @@ class Person extends StatelessWidget {
           decoration: BoxDecoration(
             color: color,
             borderRadius: BorderRadius.circular(reduis),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.green,
-                blurRadius: 1,
-                offset: Offset(1, 8), // changes position of shadow
-              ),
-            ],
+
           ),
           child: Center(
             

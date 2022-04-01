@@ -13,7 +13,7 @@ class AppBarr extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height*0.1,
+      height: MediaQuery.of(context).size.height*0.1-3,
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
         color: const Color(0xff00334a),
@@ -31,16 +31,18 @@ class AppBarr extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              IconButton(
-                onPressed: () {Navigator.of(context).pop();
-                },
-                icon: Icon(
-                  Icons.arrow_back_ios,
-                  color: Colors.green,
-                  size: 30,
-                ),
-              ),
-              Text(text,style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white,fontSize: 20),),
+             Row(children: [
+               IconButton(
+                 onPressed: () {Navigator.of(context).pop();
+                 },
+                 icon: Icon(
+                   Icons.arrow_back_ios,
+                   color: Colors.green,
+                   size: 30,
+                 ),
+               ),
+               Text(text,style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white,fontSize: 20),),
+             ],),
               Row(
                 children: [
                   InkWell(

@@ -26,7 +26,6 @@ class BotoomBar extends StatelessWidget {
         TabItemIcon(
           buildWidget: (_, color) => GestureDetector(
             child: Container(
-              height: 50,width: 50,
               child: Icon(
                 Icons.attach_money,
                 color: ColorsHelp.background,
@@ -40,7 +39,7 @@ class BotoomBar extends StatelessWidget {
           ),
           endColor: Colors.green,
           startColor: Colors.red,
-          curveColor: ColorsHelp.background,
+          curveColor: ColorsHelp.backgroundG,
         ),
         TabItemIcon(
             buildWidget: (_, color) => GestureDetector(
@@ -52,12 +51,12 @@ class BotoomBar extends StatelessWidget {
                   child: Container(
                     height: 50,width: 50,
 
-                    child: Image.asset("assets/location.png"),
+                    child:Icon(Icons.near_me,color: ColorsHelp.background,size: 30,),
                   ),
                 ),
-            curveColor: ColorsHelp.background),
+            curveColor: ColorsHelp.backgroundG),
         TabItemIcon(
-          curveColor: ColorsHelp.background,
+          curveColor: ColorsHelp.backgroundG,
           startColor: ColorsHelp.background,
           buildWidget: (_, color) => IconButton(
             onPressed: () {
@@ -72,12 +71,14 @@ class BotoomBar extends StatelessWidget {
           ),
         ),
         TabItemIcon(
+          curveColor: ColorsHelp.backgroundG,
             buildWidget: (_, color) => GestureDetector(
                   onTap: () {
                     Navigator.push(
                         context, MaterialPageRoute(builder: (_) => Notif()));
                   },
                   child: Container(
+
                  child: Stack(
                     children: <Widget>[
                       new Icon(
@@ -113,6 +114,7 @@ class BotoomBar extends StatelessWidget {
                   )
                 )),
         TabItemIcon(
+          curveColor: ColorsHelp.backgroundG,
             buildWidget: (_, color) => GestureDetector(
                   onTap: () {
                     Navigator.push(

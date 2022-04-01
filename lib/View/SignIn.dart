@@ -2,13 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../widget/BackGround.dart';
-import '../widget/PillInput.dart';
 import 'HomScreen.dart';
 
 class SignIn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var height =MediaQuery.of(context).size.height;
+    final TextEditingController emailController = TextEditingController();
+    final TextEditingController passwordController = TextEditingController();
     var width =MediaQuery.of(context).size.width;
 
     return Scaffold(
@@ -23,7 +23,6 @@ class SignIn extends StatelessWidget {
                 height: 40,
               ),
               Container(
- auth
                 width: double.infinity,
                 //margin: EdgeInsets.all(8.0),
                 padding: EdgeInsets.only(left:width>1000?width*0.20:width> 400?width*0.15:30,right: width>1000?width*0.20:width> 400?width*0.15:30),
@@ -52,7 +51,7 @@ class SignIn extends StatelessWidget {
 
                       ),
                     
-                    ],
+                    )],
                   )
 
 

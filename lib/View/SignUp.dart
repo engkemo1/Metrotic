@@ -1,13 +1,17 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:test/View/HomScreen.dart';
 import '../widget/BackGround SignUp.dart';
-import '../widget/PillInput.dart';
+import 'firebase_auth.dart';
 import 'verification.dart';
 import 'SignIn.dart';
 
 class SignUp extends StatelessWidget {
     @override
     Widget build(BuildContext context) {
-        var height =MediaQuery.of(context).size.height;
+
         var width =MediaQuery.of(context).size.width;
         final TextEditingController emailController = TextEditingController();
         final TextEditingController passwordController = TextEditingController();
@@ -125,19 +129,19 @@ class SignUp extends StatelessWidget {
                     ),
                     GestureDetector(
                         onTap: () {
-                            context.read<AuthService>().signUp(
-                                email: emailController.text.trim(),
-                                password: passwordController.text.trim(),
-                                name: nameController.text.trim(),
-                                phone: phoneController.text.trim(),
-                                tagID: tagIDController.text.trim(),
-                                nationalID: nationalIDController.text.trim()
-                            );
-                            if(user != null){
-                                Navigator.push(context, MaterialPageRoute(builder: (_)=>Verification()));
-                            }else{
-                                log("Something wrong");
-                            }
+                            // context.read<AuthService>().signUp(
+                            //     email: emailController.text.trim(),
+                            //     password: passwordController.text.trim(),
+                            //     name: nameController.text.trim(),
+                            //     phone: phoneController.text.trim(),
+                            //     tagID: tagIDController.text.trim(),
+                            //     nationalID: nationalIDController.text.trim()
+                            // );
+                            // if(context.read<AuthService>().user!= null){
+                            //     Navigator.push(context, MaterialPageRoute(builder: (_)=>Verification()));
+                            // }else{
+                            //     log("Something wrong");
+                            // }
 
 
                         },
@@ -150,12 +154,7 @@ class SignUp extends StatelessWidget {
                                 color: const Color(0xff00334a),
                                 borderRadius: BorderRadius.circular(28.0),
                             ),
-                            child: GestureDetector(
-                                onTap: () {
-                                    Navigator.of(context).pushReplacementNamed(
-                                        Home.routeName);
-                                },
-                              child: Center(
+                        child: Center(
                                   child: Text(
                                       'Sign Up',
                                       style: TextStyle(
@@ -172,7 +171,7 @@ class SignUp extends StatelessWidget {
                                   ),
                               ),
 
-                            )),
+                            ),
                     ),
                     SizedBox(height: 10,)
                     ,
