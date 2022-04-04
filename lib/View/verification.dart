@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import '../widget/Verfiey.dart';
 import 'HomScreen.dart';
 
@@ -55,21 +54,21 @@ class Verification extends StatelessWidget {
 
 
                           Positioned(child: Align(
-                            alignment: Alignment(0.002, -0.283),
-                            child:
-                            Container(
-                              width: 156,
-                              height: 156,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius:
-                                BorderRadius.all(Radius.elliptical(9999.0, 9999.0)),
-                              ),
-                              margin: EdgeInsets.fromLTRB(15.8, 20.1, 16.4, 12.1),
-                              child:   SizedBox.expand(
-                                  child: Icon(Icons.person)
-                            ),
-                            )
+                              alignment: Alignment(0.002, -0.283),
+                              child:
+                              Container(
+                                width: 156,
+                                height: 156,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius:
+                                  BorderRadius.all(Radius.elliptical(9999.0, 9999.0)),
+                                ),
+                                margin: EdgeInsets.fromLTRB(15.8, 20.1, 16.4, 12.1),
+                                child:   SizedBox.expand(
+                                    child: Icon(Icons.person)
+                                ),
+                              )
 
                           ),
                             top: MediaQuery.of(context).size.height*0.25,

@@ -73,7 +73,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           titleStyle:
           TextStyle(fontSize: 16, color: Colors.white),
           onPress: () {
-           Navigator.push(context,  MaterialPageRoute(
+            Navigator.push(context,  MaterialPageRoute(
                 builder: (_) => MapLocation(GetNearStation: 2,)));
             _animationController.reverse();
           },

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:test/View/HomScreen.dart';
 import '../widget/BackGround SignUp.dart';
-import 'firebase_auth.dart';
 import 'verification.dart';
 import 'SignIn.dart';
 

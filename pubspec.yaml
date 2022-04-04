@@ -29,18 +29,15 @@ dependencies:
   geolocator: ^8.2.0
   geocoding:
   image_picker:
-  flutter_svg:
-  adobe_xd:
-  custom_splash:
+#  flutter_svg:
+#  adobe_xd:
   animated_splash_screen:
-  flutter_google_maps:
   provider:
   flutter_animated_dialog:
   sliding_up_panel:
   jumping_bottom_nav_bar:
   expandable:
   google_maps_flutter:
-  location:
   flutter_polyline_points:
   floating_action_bubble: 1.1.4
   flutter_sliding_up_panel:
