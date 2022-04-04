@@ -1,18 +1,49 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../firebase_auth.dart';
 import '../widget/Verfiey.dart';
 import 'HomScreen.dart';
 
 
 
-class Verification extends StatelessWidget {
+class Verification extends StatefulWidget {
+
+
+  static const routeName = "/verification";
+
+  @override
+  State<Verification> createState() => _VerificationState();
+}
+
+class _VerificationState extends State<Verification> {
   final TextEditingController _fieldOne = TextEditingController();
+
   final TextEditingController _fieldTwo = TextEditingController();
+
   final TextEditingController _fieldThree = TextEditingController();
+
   final TextEditingController _fieldFour = TextEditingController();
+
   final TextEditingController _fieldFive = TextEditingController();
+
+  final TextEditingController _fieldSix = TextEditingController();
+
+  String code = '';
+  String verificationIdFinal = '';
+
+  void setData(String verificationId) {
+    setState(() {
+      verificationIdFinal = verificationId;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+
+    final routeArg = (ModalRoute.of(context)?.settings.arguments ?? <String, dynamic>{}) as Map;
+
+    context.read<AuthService>().verifyPhone(phone: routeArg['phone'].toString(), context: context, setData: setData);
+
     var height =MediaQuery.of(context).size.height;
     var width =MediaQuery.of(context).size.width;
     return Scaffold(
@@ -114,14 +145,17 @@ class Verification extends StatelessWidget {
                             OtpInput(_fieldThree,false),
                             OtpInput(_fieldFour,false),
                             OtpInput(_fieldFive,false),
-
+                            OtpInput(_fieldSix,false),
                           ]
                       ),
                     ),
                     SizedBox(height: 30,),
                     GestureDetector(
                       onTap: (){
-                        Navigator.push(context, MaterialPageRoute(builder: (_)=>Home()));
+                        code = _fieldOne.text + _fieldTwo.text + _fieldThree.text +
+                            _fieldFour.text + _fieldFive.text + _fieldSix.text;
+
+                        context.read<AuthService>().signInWithPhoneNumber(verificationIdFinal, code, context);
 
                       },
                       child:  Container(

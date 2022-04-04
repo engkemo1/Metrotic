@@ -43,7 +43,11 @@ dependencies:
   flutter_sliding_up_panel:
 
   cupertino_icons: ^1.0.2
-
+  firebase_core:
+  firebase_auth: ^3.3.12
+  cloud_firestore:
+  firebase_auth_web:
+  shared_preferences:
 
 dev_dependencies:
   flutter_test:

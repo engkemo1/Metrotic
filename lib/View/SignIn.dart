@@ -1,14 +1,34 @@
+
+import 'dart:developer';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/src/provider.dart';
+import 'package:test/View/reset_password.dart';
 
+import '../firebase_auth.dart';
 import '../widget/BackGround.dart';
 import 'HomScreen.dart';
 
-class SignIn extends StatelessWidget {
+class SignIn extends StatefulWidget {
+
+  static const routeName = "/sign_in";
+
+  @override
+  State<SignIn> createState() => _SignInState();
+}
+
+class _SignInState extends State<SignIn> {
+
+  User? user = FirebaseAuth.instance.currentUser;
+
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
-    final TextEditingController emailController = TextEditingController();
-    final TextEditingController passwordController = TextEditingController();
+    var height =MediaQuery.of(context).size.height;
     var width =MediaQuery.of(context).size.width;
 
     return Scaffold(
@@ -17,6 +37,7 @@ class SignIn extends StatelessWidget {
           child: ListView(
             children: <Widget>[
               Container(
+                height: MediaQuery.of(context).size.height*0.4,
                 child:  BackGround(),
               ),
               SizedBox(
@@ -48,51 +69,86 @@ class SignIn extends StatelessWidget {
                         border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(32.0))),
                         labelText: "Password",
                         hintText: "Enter Your Password",
-
                       ),
-                    
-                    )],
-                  )
+                      keyboardType: TextInputType.visiblePassword,
 
-
-
+                    ),
+                  ],
+                ),
               ),
-
-
               SizedBox(
                 height: 20,
               ),
               GestureDetector(
                 onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (_)=>Home()));
+                  context.read<AuthService>().signIn(
+                    email: emailController.text.trim(),
+                    password: passwordController.text.trim(),
+                    context: context,
+                  );
+
 
                 },
                 child: Container(
-                    margin: EdgeInsets.only(left:width>1000?width*0.35:width> 500?width*0.30:70,right: width>1000?width*0.35:width> 500?width*0.30:70),
+                    margin: EdgeInsets.only(left:width>1000?width*0.45:width> 400?width*0.40:100,right: width>1000?width*0.45:width> 400?width*0.40:100),
                     width: 190.0,
                     height: 55.0,
                     decoration: BoxDecoration(
                       color: const Color(0xff00334a),
                       borderRadius: BorderRadius.circular(28.0),
                     ),
-                    child: Center(
-                      child: Text(
-                        'log in',
-                        style: TextStyle(
-                          fontFamily: 'Montserrat',
-                          fontSize: 13,
-                          color: const Color(0xffffffff),
-                          letterSpacing: 0.65,
-                          fontWeight: FontWeight.w700,
-                          height: 1.2307692307692308,
+                    child: GestureDetector(
+                      onTap: () {
+                        context.read<AuthService>().signIn(
+                          email: emailController.text.trim(),
+                          password: passwordController.text.trim(),
+                          context: context,
+                        );
+
+
+                      },
+                      child: Center(
+
+                        child: Text(
+                          'log in',
+                          style: TextStyle(
+                            fontFamily: 'Montserrat',
+                            fontSize: 13,
+                            color: const Color(0xffffffff),
+                            letterSpacing: 0.65,
+                            fontWeight: FontWeight.w700,
+                            height: 1.2307692307692308,
+                          ),
+                          textHeightBehavior:
+                          TextHeightBehavior(applyHeightToFirstAscent: false),
+                          softWrap: false,
                         ),
-                        textHeightBehavior:
-                        TextHeightBehavior(applyHeightToFirstAscent: false),
-                        softWrap: false,
                       ),
                     )),
               ),
               SizedBox(height: 10,),
+              GestureDetector(
+                onTap: () {
+                  Navigator.of(context).pushNamed(
+                      ResetPasswordScreen.routeName);
+                },
+                child: Center(
+                  child: Text(
+                    'Forgot password?',
+                    style: TextStyle(
+                      fontFamily: 'Montserrat',
+                      fontSize: 13,
+                      color: const Color(0xff00334a),
+                      letterSpacing: 0.65,
+                      fontWeight: FontWeight.w700,
+                      height: 1.2307692307692308,
+                    ),
+                    textHeightBehavior:
+                    TextHeightBehavior(applyHeightToFirstAscent: false),
+                    softWrap: false,
+                  ),
+                ),
+              ),
             ],
           ),
         ));

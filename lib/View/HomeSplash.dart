@@ -1,8 +1,10 @@
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'Authentication.dart';
+import 'HomScreen.dart';
 import 'SignIn.dart';
 
 class HomeSplash extends StatefulWidget {
@@ -14,12 +16,20 @@ class HomeSplash extends StatefulWidget {
 
 class _HomeSplashState extends State<HomeSplash> {
 
+  User? user = FirebaseAuth.instance.currentUser;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         body:GestureDetector(
             onTap: (){
-              Navigator.push(context, MaterialPageRoute(builder: (_)=> AuthenticationPage()));
+              if(user != null){
+
+                Navigator.of(context).pushReplacementNamed(Home.routeName);
+              }else{
+
+                Navigator.of(context).pushReplacementNamed(SignIn.routeName);
+              }
             },
             child:
             Container(

@@ -17,6 +17,8 @@ import 'menu.dart';
 import 'dart:ui' as ui;
 
 class Home extends StatefulWidget {
+
+  static const routeName = "/home_screen";
   const Home({Key? key}) : super(key: key);
 
   @override

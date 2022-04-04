@@ -1,16 +1,21 @@
 import 'dart:developer';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:test/View/HomScreen.dart';
+import '../firebase_auth.dart';
 import '../widget/BackGround SignUp.dart';
-import 'verification.dart';
 import 'SignIn.dart';
 
 class SignUp extends StatelessWidget {
+
+    static const routeName = "/sign_up";
+
+    User? user = FirebaseAuth.instance.currentUser;
+
     @override
     Widget build(BuildContext context) {
-
+        var height =MediaQuery.of(context).size.height;
         var width =MediaQuery.of(context).size.width;
         final TextEditingController emailController = TextEditingController();
         final TextEditingController passwordController = TextEditingController();
@@ -123,55 +128,51 @@ class SignUp extends StatelessWidget {
                         ],),
                     ),
 
+
                     SizedBox(
                         height: 20,
                     ),
-                    GestureDetector(
-                        onTap: () {
-                            // context.read<AuthService>().signUp(
-                            //     email: emailController.text.trim(),
-                            //     password: passwordController.text.trim(),
-                            //     name: nameController.text.trim(),
-                            //     phone: phoneController.text.trim(),
-                            //     tagID: tagIDController.text.trim(),
-                            //     nationalID: nationalIDController.text.trim()
-                            // );
-                            // if(context.read<AuthService>().user!= null){
-                            //     Navigator.push(context, MaterialPageRoute(builder: (_)=>Verification()));
-                            // }else{
-                            //     log("Something wrong");
-                            // }
+                    Container(
+                        margin: EdgeInsets.only(left:width>1000?width*0.35:width> 500?width*0.30:70,right: width>1000?width*0.35:width> 500?width*0.30:70),
 
+                        width: 190.0,
+                        height: 55.0,
+                        decoration: BoxDecoration(
+                            color: const Color(0xff00334a),
+                            borderRadius: BorderRadius.circular(28.0),
+                        ),
+                        child: GestureDetector(
+                            onTap: () {
 
-                        },
-                        child: Container(
-                            margin: EdgeInsets.only(left:width>1000?width*0.35:width> 500?width*0.30:70,right: width>1000?width*0.35:width> 500?width*0.30:70),
+                                context.read<AuthService>().signUp(
+                                    email: emailController.text.trim(),
+                                    password: passwordController.text.trim(),
+                                    name: nameController.text.trim(),
+                                    phone: phoneController.text.trim(),
+                                    tagID: tagIDController.text.trim(),
+                                    nationalID: nationalIDController.text.trim(),
+                                    context: context
+                                );
 
-                            width: 190.0,
-                            height: 55.0,
-                            decoration: BoxDecoration(
-                                color: const Color(0xff00334a),
-                                borderRadius: BorderRadius.circular(28.0),
+                            },
+                            child: Center(
+                                child: Text(
+                                    'Sign Up',
+                                    style: TextStyle(
+                                        fontFamily: 'Montserrat',
+                                        fontSize: 13,
+                                        color: const Color(0xffffffff),
+                                        letterSpacing: 0.65,
+                                        fontWeight: FontWeight.w700,
+                                        height: 1.2307692307692308,
+                                    ),
+                                    textHeightBehavior:
+                                    TextHeightBehavior(applyHeightToFirstAscent: false),
+                                    softWrap: false,
+                                ),
                             ),
-                        child: Center(
-                                  child: Text(
-                                      'Sign Up',
-                                      style: TextStyle(
-                                          fontFamily: 'Montserrat',
-                                          fontSize: 13,
-                                          color: const Color(0xffffffff),
-                                          letterSpacing: 0.65,
-                                          fontWeight: FontWeight.w700,
-                                          height: 1.2307692307692308,
-                                      ),
-                                      textHeightBehavior:
-                                      TextHeightBehavior(applyHeightToFirstAscent: false),
-                                      softWrap: false,
-                                  ),
-                              ),
 
-                            ),
-                    ),
+                        )),
                     SizedBox(height: 10,)
                     ,
                     Row(
