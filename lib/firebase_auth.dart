@@ -78,13 +78,29 @@ class AuthService {
       log("Signed in");
 
       showSnackBar(context, "Signed in");
-      Navigator.of(context).pushReplacementNamed(
-          Home.routeName);
+      getUser(email: email, context: context);
     } on auth.FirebaseAuthException catch(e){
 
       showSnackBar(context, e.message!);
       log(e.message!);
     }
+  }
+
+  Future<void> getUser({required String email, required BuildContext context}) async {
+    myUser.User user = myUser.User(uid: "", email: "", name: "", phone: "", tagID: "", nationalID: "");
+    await usersReference.where('email', isEqualTo: email)
+        .get()
+        .then((documentSnapshot) {
+          documentSnapshot.docs.forEach((result) {
+            user = result.data() as myUser.User;
+          });
+
+          _saveUser(user);
+    });
+
+    Navigator.of(context).pushReplacementNamed(
+        Home.routeName);
+
   }
 
   Future<String> verifyPhone({required String phone, required BuildContext context,

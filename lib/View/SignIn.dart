@@ -1,8 +1,4 @@
-
-import 'dart:developer';
-
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/src/provider.dart';
 import 'package:test/View/reset_password.dart';
@@ -71,7 +67,7 @@ class _SignInState extends State<SignIn> {
                         hintText: "Enter Your Password",
                       ),
                       keyboardType: TextInputType.visiblePassword,
-
+                      obscureText: true,
                     ),
                   ],
                 ),
