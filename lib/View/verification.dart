@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../firebase_auth.dart';
@@ -42,7 +44,9 @@ class _VerificationState extends State<Verification> {
 
     final routeArg = (ModalRoute.of(context)?.settings.arguments ?? <String, dynamic>{}) as Map;
 
-    context.read<AuthService>().verifyPhone(phone: "+2routeArg['phone']", context: context, setData: setData);
+    //log(routeArg['phone'].toString());
+
+    context.read<AuthService>().verifyPhone(phone: routeArg['phone'].toString(), context: context, setData: setData);
 
     var height =MediaQuery.of(context).size.height;
     var width =MediaQuery.of(context).size.width;
