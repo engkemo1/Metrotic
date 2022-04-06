@@ -42,7 +42,7 @@ class _VerificationState extends State<Verification> {
 
     final routeArg = (ModalRoute.of(context)?.settings.arguments ?? <String, dynamic>{}) as Map;
 
-    context.read<AuthService>().verifyPhone(phone: routeArg['phone'].toString(), context: context, setData: setData);
+    context.read<AuthService>().verifyPhone(phone: "+2routeArg['phone']", context: context, setData: setData);
 
     var height =MediaQuery.of(context).size.height;
     var width =MediaQuery.of(context).size.width;

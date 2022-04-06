@@ -33,6 +33,12 @@ class _EditInfoState extends State<EditInfo> {
   String nationalID = "";
 
   @override
+  void initState() {
+    super.initState();
+    getUser();
+  }
+
+  @override
   Widget build(BuildContext context) {
     var provider = Provider.of<GetImage>(context);
 
@@ -350,20 +356,19 @@ class _EditInfoState extends State<EditInfo> {
 
   Future<void> getUser() async {
     final prefs = await SharedPreferences.getInstance();
-    email = prefs.getString("email") ?? "";
-    name = prefs.getString("name") ?? "";
-    phone = prefs.getString("phone") ?? "";
-    tagID = prefs.getString("tagID") ?? "";
-    nationalID = prefs.getString("nationalID") ?? "";
 
-    log("email: $email");
+
+
 
     setState(() {
-
+      email = prefs.getString("email") ?? "22";
+      name = prefs.getString("name") ?? "";
+      phone = prefs.getString("phone") ?? "";
+      tagID = prefs.getString("tagID") ?? "";
+      nationalID = prefs.getString("nationalID") ?? "";
 
     });
-
-
+    log("email: $email");
     //return User(uid: "",email: email ,name: name, phone: phone, tagID: tagID, nationalID: nationalID);
 
 
