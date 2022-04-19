@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'View/HomScreen.dart';
@@ -27,21 +28,14 @@ class AuthService {
   }
 */
 
-  _saveUser(myUser.User user) async {
-    log("email: ${user.uid}");
-    final prefs = await SharedPreferences.getInstance();
-    prefs.setString('uid', user.uid);
-    prefs.setString('name', user.name);
-    prefs.setString('email', user.email);
-    prefs.setString('phone', user.phone);
-    prefs.setString('tagID', user.tagID);
-    prefs.setString('nationalID', user.nationalID);
-  }
-
   //Stream<User?> get user => _firebaseAuth.authStateChanges().map(_userFromFirebase);
 
   CollectionReference usersReference =
       FirebaseFirestore.instance.collection('Users');
+  CollectionReference ticketsReference =
+      FirebaseFirestore.instance.collection('Tickets');
+  CollectionReference walletsReference =
+      FirebaseFirestore.instance.collection('Wallets');
 
   Future<String?> resetPassword({required String email}) async {
     try {
@@ -67,19 +61,30 @@ class AuthService {
       'nationalID': nationalID,
     }).then((value) {
       _saveUser(myUser.User(
-        uid: value.id,
-        email: email,
-        name: name,
-        phone: phone,
-        tagID: tagID,
-        nationalID: nationalID));
+          uid: value.id,
+          email: email,
+          name: name,
+          phone: phone,
+          tagID: tagID,
+          nationalID: nationalID));
+      createWallet(uid: value.id);
       Navigator.of(context)
           .pushReplacementNamed(Verification.routeName, arguments: {
         //"phone": phoneController.text.trim(),
         "phone": "+2$phone",
       });
     });
+  }
 
+  _saveUser(myUser.User user) async {
+    log("email: ${user.uid}");
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString('uid', user.uid);
+    prefs.setString('name', user.name);
+    prefs.setString('email', user.email);
+    prefs.setString('phone', user.phone);
+    prefs.setString('tagID', user.tagID);
+    prefs.setString('nationalID', user.nationalID);
   }
 
   Future<void> signIn(
@@ -118,7 +123,6 @@ class AuthService {
         Navigator.of(context).pushReplacementNamed(Home.routeName);
       });
     });
-
   }
 
   Future<void> updateUser(
@@ -131,6 +135,7 @@ class AuthService {
       "tagID": user.tagID,
       "nationalID": user.nationalID
     }).then((_) {
+      getUser(email: user.email, context: context);
       //showSnackBar(context, "Profile updated");
       Navigator.of(context).pushReplacementNamed(Home.routeName);
     });
@@ -209,6 +214,79 @@ class AuthService {
     } on auth.FirebaseAuthException catch (e) {
       showSnackBar(context, e.message!);
     }
+  }
+  Future<void> createWallet(
+      {required String uid}) async {
+
+    await walletsReference.add({
+      'uid': uid,
+      'balance': 0,
+    }).then((value) {
+
+    });
+  }
+
+
+  Future<void> createTicket(
+      {required String uid,
+      required String walletId,
+      required String noOfStations,
+      required int price,
+      required int balance,
+      required BuildContext context}) async {
+    var date = "${DateFormat.yMMMd().format(DateTime.now())}";
+    var time = "${DateFormat.Hms().format(DateTime.now())}";
+
+    await ticketsReference.add({
+      'uid': uid,
+      'time': time,
+      'date': date,
+      'noOfStations': noOfStations,
+      'price': price,
+    }).then((value) {
+
+      print("${value.id}");
+      //showSnackBar(context, "Ticket purchasing done");
+      updateWallet(walletId: walletId, price: price, balance: balance, context: context);
+    });
+  }
+
+  Future<void> checkWallet(
+      {required String uid,
+      required String noOfStations,
+      required int price,
+      required BuildContext context}) async {
+    await walletsReference.where('uid', isEqualTo: uid).get().then((value) {
+      value.docs.forEach((result) {
+        var balance = result.get('balance');
+
+        if (balance >= price) {
+          print("$balance");
+          createTicket(
+              uid: uid,
+              walletId: result.id,
+              noOfStations: noOfStations,
+              price: price,
+              balance: balance,
+              context: context);
+        } else {
+          //showSnackBar(context, "Insufficient balance");
+        }
+      });
+    });
+  }
+
+  Future<void> updateWallet(
+      {required String walletId,
+      required int price,
+      required int balance,
+      required BuildContext context}) async {
+    await walletsReference.doc(walletId).update({
+      "balance": balance - price,
+    }).then((_) {
+      //showSnackBar(context, "Profile updated");
+      Navigator.of(context).pushReplacementNamed(Home.routeName);
+    });
   }
 
   Future<void> signOut() async {

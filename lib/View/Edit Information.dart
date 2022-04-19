@@ -418,7 +418,7 @@ class _EditInfoState extends State<EditInfo> {
       tagID = prefs.getString("tagID") ?? "";
       nationalID = prefs.getString("nationalID") ?? "";
 
-      //log("email: ${user!.uid}");
+      log("email: ${tagID}");
     });
     //return User(uid: "",email: email ,name: name, phone: phone, tagID: tagID, nationalID: nationalID);
   }

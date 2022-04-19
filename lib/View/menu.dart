@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:test/View/supsciptions/Subscription%20Details.dart';
+import 'package:test/View/supsciptions/TicketPrice.dart';
 
 import '../firebase_auth.dart';
 import '../widget/Map Metro.dart';
@@ -13,7 +14,6 @@ import 'About.dart';
 import 'SignIn.dart';
 
 class Menu extends StatelessWidget {
-
   User? user = FirebaseAuth.instance.currentUser;
 
   @override
@@ -143,7 +143,7 @@ class Menu extends StatelessWidget {
                           height: 1.608695652173913,
                         ),
                         textHeightBehavior:
-                        TextHeightBehavior(applyHeightToFirstAscent: false),
+                            TextHeightBehavior(applyHeightToFirstAscent: false),
                         softWrap: false,
                       ),
                       Text(
@@ -155,7 +155,7 @@ class Menu extends StatelessWidget {
                           height: 1.5833333333333333,
                         ),
                         textHeightBehavior:
-                        TextHeightBehavior(applyHeightToFirstAscent: false),
+                            TextHeightBehavior(applyHeightToFirstAscent: false),
                         softWrap: false,
                       ),
                     ],
@@ -179,7 +179,7 @@ class Menu extends StatelessWidget {
                           height: 1.608695652173913,
                         ),
                         textHeightBehavior:
-                        TextHeightBehavior(applyHeightToFirstAscent: false),
+                            TextHeightBehavior(applyHeightToFirstAscent: false),
                         softWrap: false,
                       ),
                       Text(
@@ -191,7 +191,7 @@ class Menu extends StatelessWidget {
                           height: 1.5833333333333333,
                         ),
                         textHeightBehavior:
-                        TextHeightBehavior(applyHeightToFirstAscent: false),
+                            TextHeightBehavior(applyHeightToFirstAscent: false),
                         softWrap: false,
                       ),
                     ],
@@ -218,7 +218,7 @@ class Menu extends StatelessWidget {
                           height: 1.608695652173913,
                         ),
                         textHeightBehavior:
-                        TextHeightBehavior(applyHeightToFirstAscent: false),
+                            TextHeightBehavior(applyHeightToFirstAscent: false),
                         softWrap: false,
                       ),
                       Text(
@@ -230,7 +230,7 @@ class Menu extends StatelessWidget {
                           height: 1.5833333333333333,
                         ),
                         textHeightBehavior:
-                        TextHeightBehavior(applyHeightToFirstAscent: false),
+                            TextHeightBehavior(applyHeightToFirstAscent: false),
                         softWrap: false,
                       ),
                     ],
@@ -240,7 +240,10 @@ class Menu extends StatelessWidget {
                   height: 15,
                 ),
                 GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (_) => TicketPrice()));
+                  },
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -254,7 +257,7 @@ class Menu extends StatelessWidget {
                           height: 1.608695652173913,
                         ),
                         textHeightBehavior:
-                        TextHeightBehavior(applyHeightToFirstAscent: false),
+                            TextHeightBehavior(applyHeightToFirstAscent: false),
                         softWrap: false,
                       ),
                       Text(
@@ -266,7 +269,7 @@ class Menu extends StatelessWidget {
                           height: 1.5833333333333333,
                         ),
                         textHeightBehavior:
-                        TextHeightBehavior(applyHeightToFirstAscent: false),
+                            TextHeightBehavior(applyHeightToFirstAscent: false),
                         softWrap: false,
                       ),
                     ],
@@ -293,7 +296,7 @@ class Menu extends StatelessWidget {
                           height: 1.608695652173913,
                         ),
                         textHeightBehavior:
-                        TextHeightBehavior(applyHeightToFirstAscent: false),
+                            TextHeightBehavior(applyHeightToFirstAscent: false),
                         softWrap: false,
                       ),
                       Text(
@@ -305,7 +308,7 @@ class Menu extends StatelessWidget {
                           height: 1.5833333333333333,
                         ),
                         textHeightBehavior:
-                        TextHeightBehavior(applyHeightToFirstAscent: false),
+                            TextHeightBehavior(applyHeightToFirstAscent: false),
                         softWrap: false,
                       ),
                     ],
@@ -315,11 +318,11 @@ class Menu extends StatelessWidget {
                   height: 40,
                 ),
                 GestureDetector(
-                    onTap: ()async {
+                    onTap: () async {
                       await context.read<AuthService>().signOut();
 
-                      Navigator.of(context).pushReplacementNamed(
-                          SignIn.routeName);
+                      Navigator.of(context)
+                          .pushReplacementNamed(SignIn.routeName);
                     },
                     child: Center(
                       child: Text(
@@ -332,7 +335,7 @@ class Menu extends StatelessWidget {
                           height: 1.6206896551724137,
                         ),
                         textHeightBehavior:
-                        TextHeightBehavior(applyHeightToFirstAscent: false),
+                            TextHeightBehavior(applyHeightToFirstAscent: false),
                         softWrap: false,
                       ),
                     )),
