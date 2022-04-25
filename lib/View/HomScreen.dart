@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:test/View/map.dart';
 import '../helper.dart';
@@ -26,6 +27,13 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
+  String uid = "";
+  String email = "";
+  String name = "";
+  String phone = "";
+  String tagID = "";
+  String nationalID = "";
+
   PanelController _pc = new PanelController();
   late GoogleMapController mapController;
   late PolylinePoints polylinePoints;
@@ -37,8 +45,11 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   late Animation<double> _animation;
   late AnimationController _animationController;
 
+
   @override
   void initState() {
+
+    getUser();
     _animationController = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 260),
@@ -501,7 +512,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                       height: 15,
                     ),
                     Text(
-                      'Kamal Magdy ',
+                      name,
                       style: TextStyle(
                         fontFamily: 'Montserrat',
                         fontSize: 25,
@@ -529,7 +540,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                       height: 20,
                     ),
                     Text(
-                      'Good Morning kamal :)',
+                      'Good Morning ${name.split(' ')[0]} :)',
                       style: TextStyle(
                         fontFamily: 'Montserrat',
                         fontSize: 12,
@@ -1393,5 +1404,21 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 ),
               ),
             ])));
+  }
+
+  Future<void> getUser() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    setState(() {
+      uid = prefs.getString("uid") ?? "";
+      email = prefs.getString("email") ?? "";
+      name = prefs.getString("name") ?? "";
+      phone = prefs.getString("phone") ?? "";
+      tagID = prefs.getString("tagID") ?? "";
+      nationalID = prefs.getString("nationalID") ?? "";
+
+      //log("email: ${tagID}");
+    });
+    //return User(uid: "",email: email ,name: name, phone: phone, tagID: tagID, nationalID: nationalID);
   }
 }

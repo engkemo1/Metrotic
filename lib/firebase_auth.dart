@@ -97,7 +97,7 @@ class AuthService {
 
       log("Signed in");
 
-      showSnackBar(context, "Signed in");
+      //showSnackBar(context, "Signed in");
       getUser(email: email, context: context);
     } on auth.FirebaseAuthException catch (e) {
       showSnackBar(context, e.message!);
@@ -108,6 +108,26 @@ class AuthService {
   Future<void> getUser(
       {required String email, required BuildContext context}) async {
     await usersReference.where('email', isEqualTo: email).get().then((value) {
+      value.docs.forEach((result) {
+        myUser.User user = myUser.User(
+            uid: result.id,
+            email: result.get('email'),
+            name: result.get('name'),
+            phone: result.get('phone'),
+            tagID: result.get('tagID'),
+            nationalID: result.get('nationalID'));
+
+        print(result.id);
+        _saveUser(user);
+
+        Navigator.of(context).pushReplacementNamed(Home.routeName);
+      });
+    });
+  }
+
+  Future<void> checkUser(
+      {required String nationalID, required BuildContext context}) async {
+    await usersReference.where('nationalID', isEqualTo: nationalID).get().then((value) {
       value.docs.forEach((result) {
         myUser.User user = myUser.User(
             uid: result.id,

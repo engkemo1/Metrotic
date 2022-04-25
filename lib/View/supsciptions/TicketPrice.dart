@@ -19,9 +19,8 @@ class TicketPrice extends StatefulWidget {
 }
 
 class _TicketPriceState extends State<TicketPrice> {
-
   String uid = "";
-  late List<Map<String, Object>> ticketPrices;
+  List<Map<String, Object>> ticketPrices = <Map<String, Object>>[];
 
   @override
   void initState() {
@@ -63,10 +62,12 @@ class _TicketPriceState extends State<TicketPrice> {
             ),
             GestureDetector(
               onTap: () {
-
                 print(uid);
                 context.read<AuthService>().checkWallet(
-                    uid: uid, noOfStations: "9", price: 5, context: context);
+                    uid: uid,
+                    noOfStations: ticketPrices[0]["noOfStations"].toString(),
+                    price: int.parse(ticketPrices[0]["price"].toString()),
+                    context: context);
 
                 /*showAnimatedDialog(
                   context: context,
@@ -101,7 +102,7 @@ class _TicketPriceState extends State<TicketPrice> {
                             filterQuality: FilterQuality.high,
                           ),
                           Text(
-                            "9 Station",
+                            "${ticketPrices.isNotEmpty ? ticketPrices[0]["noOfStations"] : ""} Station",
                             style: TextStyle(color: Colors.white),
                           )
                         ],
@@ -110,7 +111,7 @@ class _TicketPriceState extends State<TicketPrice> {
                     Padding(
                       padding: EdgeInsets.only(right: 15),
                       child: Text(
-                        "5 L.E",
+                        "${ticketPrices.isNotEmpty ? ticketPrices[0]["price"] : ""} L.E",
                         style: TextStyle(
                             color: ColorsHelp.backgroundG,
                             fontSize: 15,
@@ -133,9 +134,11 @@ class _TicketPriceState extends State<TicketPrice> {
             ),
             GestureDetector(
               onTap: () {
-
                 context.read<AuthService>().checkWallet(
-                    uid: uid, noOfStations: "10-16", price: 7, context: context);
+                    uid: uid,
+                    noOfStations: ticketPrices[1]["noOfStations"].toString(),
+                    price: int.parse(ticketPrices[1]["price"].toString()),
+                    context: context);
                 /*showAnimatedDialog(
                   context: context,
                   barrierDismissible: true,
@@ -169,7 +172,7 @@ class _TicketPriceState extends State<TicketPrice> {
                             filterQuality: FilterQuality.high,
                           ),
                           Text(
-                            "10-16 Station  ",
+                            "${ticketPrices.isNotEmpty ? ticketPrices[1]["noOfStations"] : ""} Station  ",
                             style: TextStyle(color: Colors.white),
                           )
                         ],
@@ -178,7 +181,7 @@ class _TicketPriceState extends State<TicketPrice> {
                     Padding(
                       padding: EdgeInsets.only(right: 15),
                       child: Text(
-                        "7 L.E",
+                        "${ticketPrices.isNotEmpty ? ticketPrices[1]["price"] : ""} L.E",
                         style: TextStyle(
                             color: ColorsHelp.backgroundG,
                             fontSize: 15,
@@ -202,7 +205,10 @@ class _TicketPriceState extends State<TicketPrice> {
             GestureDetector(
               onTap: () {
                 context.read<AuthService>().checkWallet(
-                    uid: uid, noOfStations: "16+", price: 10, context: context);
+                    uid: uid,
+                    noOfStations: ticketPrices[2]["noOfStations"].toString(),
+                    price: int.parse(ticketPrices[2]["price"].toString()),
+                    context: context);
                 /*showAnimatedDialog(
                   context: context,
                   barrierDismissible: true,
@@ -236,7 +242,7 @@ class _TicketPriceState extends State<TicketPrice> {
                             filterQuality: FilterQuality.high,
                           ),
                           Text(
-                            "16+ Station",
+                            "${ticketPrices.isNotEmpty ? ticketPrices[2]["noOfStations"] : ""} Station",
                             style: TextStyle(color: Colors.white),
                           )
                         ],
@@ -245,7 +251,7 @@ class _TicketPriceState extends State<TicketPrice> {
                     Padding(
                       padding: EdgeInsets.only(right: 15),
                       child: Text(
-                        "10 L.E",
+                        "${ticketPrices.isNotEmpty ? ticketPrices[2]["price"] : ""} L.E",
                         style: TextStyle(
                             color: ColorsHelp.backgroundG,
                             fontSize: 15,
@@ -274,22 +280,23 @@ class _TicketPriceState extends State<TicketPrice> {
 
   Future<void> getPrices() async {
     CollectionReference ticketPricesReference =
-    FirebaseFirestore.instance.collection('Tickets_Prices');
+        FirebaseFirestore.instance.collection('Tickets_Prices');
 
-    await ticketPricesReference.where('uid', isEqualTo: uid).orderBy("order").get().then((value) {
-
+    await ticketPricesReference.orderBy("order").get().then((value) {
       value.docs.forEach((result) {
+        //print("value: ${result.toString()}");
         setState(() {
-          ticketPrices.add({"noOfStations": result.get("noOfStations")});
-          ticketPrices.add({"price": result.get("price")});
+          ticketPrices.add({
+            "noOfStations": result.get("noOfStations"),
+            "price": result.get("price")
+          });
+          //ticketPrices.add({"price": result.get("price")});
 
-          print(ticketPrices[0]);
+          print(ticketPrices);
         });
-
-
       });
 
-
+      //print(ticketPrices[0]['price']);
     });
   }
 }
