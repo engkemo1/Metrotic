@@ -202,6 +202,7 @@ class _SupDet3State extends State<SupDet3> {
             tripPrice: result.get("tripPrice"));*/
         setState(() {
           subscriptionsPrices.add({
+            "subId": result.id,
             "destination": result.get("destination"),
             "price": result.get("price"),
             "tripPrice": result.get("tripPrice"),
