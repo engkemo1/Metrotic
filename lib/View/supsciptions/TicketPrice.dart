@@ -67,7 +67,7 @@ class _TicketPriceState extends State<TicketPrice> {
                     uid: uid,
                     noOfStations: ticketPrices[0]["noOfStations"].toString(),
                     price: int.parse(ticketPrices[0]["price"].toString()),
-                    context: context);
+                    context: context, ticket: true, subId: '');
 
                 /*showAnimatedDialog(
                   context: context,
@@ -138,7 +138,7 @@ class _TicketPriceState extends State<TicketPrice> {
                     uid: uid,
                     noOfStations: ticketPrices[1]["noOfStations"].toString(),
                     price: int.parse(ticketPrices[1]["price"].toString()),
-                    context: context);
+                    context: context, ticket: true, subId: '');
                 /*showAnimatedDialog(
                   context: context,
                   barrierDismissible: true,
@@ -208,7 +208,7 @@ class _TicketPriceState extends State<TicketPrice> {
                     uid: uid,
                     noOfStations: ticketPrices[2]["noOfStations"].toString(),
                     price: int.parse(ticketPrices[2]["price"].toString()),
-                    context: context);
+                    context: context, ticket: true, subId: '');
                 /*showAnimatedDialog(
                   context: context,
                   barrierDismissible: true,

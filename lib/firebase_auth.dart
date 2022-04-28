@@ -37,6 +37,10 @@ class AuthService {
   CollectionReference walletsReference =
       FirebaseFirestore.instance.collection('Wallets');
 
+  CollectionReference subscriptionsReference =
+  FirebaseFirestore.instance.collection('Subscriptions');
+
+
   Future<String?> resetPassword({required String email}) async {
     try {
       await _firebaseAuth.sendPasswordResetEmail(email: email);
@@ -127,7 +131,10 @@ class AuthService {
 
   Future<void> checkUser(
       {required String nationalID, required BuildContext context}) async {
-    await usersReference.where('nationalID', isEqualTo: nationalID).get().then((value) {
+    await usersReference
+        .where('nationalID', isEqualTo: nationalID)
+        .get()
+        .then((value) {
       value.docs.forEach((result) {
         myUser.User user = myUser.User(
             uid: result.id,
@@ -235,17 +242,37 @@ class AuthService {
       showSnackBar(context, e.message!);
     }
   }
-  Future<void> createWallet(
-      {required String uid}) async {
 
+  Future<void> createWallet({required String uid}) async {
     await walletsReference.add({
       'uid': uid,
       'balance': 0,
-    }).then((value) {
-
-    });
+    }).then((value) {});
   }
 
+  Future<void> createSub(
+      {required String uid,
+      required String walletId,
+      required String subId,
+      required int price,
+      required int balance,
+      required BuildContext context}) async {
+    var date = "${DateFormat.yMMMd().format(DateTime.now())}";
+    var time = "${DateFormat.Hms().format(DateTime.now())}";
+    print(subId);
+    await subscriptionsReference.add({
+      'uid': uid,
+      'time': time,
+      'date': date,
+      'subId': subId,
+      'price': price,
+    }).then((value) {
+      print("${value.id}");
+      //showSnackBar(context, "Ticket purchasing done");
+      updateWallet(
+          walletId: walletId, price: price, balance: balance, context: context);
+    });
+  }
 
   Future<void> createTicket(
       {required String uid,
@@ -264,17 +291,19 @@ class AuthService {
       'noOfStations': noOfStations,
       'price': price,
     }).then((value) {
-
       print("${value.id}");
       //showSnackBar(context, "Ticket purchasing done");
-      updateWallet(walletId: walletId, price: price, balance: balance, context: context);
+      updateWallet(
+          walletId: walletId, price: price, balance: balance, context: context);
     });
   }
 
   Future<void> checkWallet(
       {required String uid,
       required String noOfStations,
+      required String subId,
       required int price,
+      required bool ticket,
       required BuildContext context}) async {
     await walletsReference.where('uid', isEqualTo: uid).get().then((value) {
       value.docs.forEach((result) {
@@ -282,13 +311,21 @@ class AuthService {
 
         if (balance >= price) {
           print("$balance");
-          createTicket(
-              uid: uid,
-              walletId: result.id,
-              noOfStations: noOfStations,
-              price: price,
-              balance: balance,
-              context: context);
+          ticket
+              ? createTicket(
+                  uid: uid,
+                  walletId: result.id,
+                  noOfStations: noOfStations,
+                  price: price,
+                  balance: balance,
+                  context: context)
+              : createSub(
+                  uid: uid,
+                  walletId: result.id,
+                  subId: subId,
+                  price: price,
+                  balance: balance,
+                  context: context);
         } else {
           //showSnackBar(context, "Insufficient balance");
         }

@@ -5,11 +5,12 @@ import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import '../helper.dart';
 class Expandables extends StatelessWidget {
 final String price;
-final String Destination;
-final String TripPrice;
-final String DiscountPercentage;
+final String destination;
+final String tripPrice;
+final String discountPercentage;
+final Function() onPressed;
 
-  const Expandables({Key? key,  required this.price, required this.Destination, required this.TripPrice,  required this.DiscountPercentage}) : super(key: key);
+  const Expandables({Key? key,  required this.price, required this.destination, required this.tripPrice,  required this.discountPercentage, required this.onPressed}) : super(key: key);
 
 
   @override
@@ -47,7 +48,7 @@ final String DiscountPercentage;
                     filterQuality: FilterQuality.high,
                   ),
                   Text(
-                    Destination,
+                    destination,
                     style: TextStyle(color: Colors.white),
                   )
                 ],
@@ -111,7 +112,7 @@ final String DiscountPercentage;
                             width: 80,
                             child: Center(
                               child: Text(
-                                Destination,
+                                destination,
                                 style: TextStyle(
                                     fontSize: 20,
                                     color: ColorsHelp.background),
@@ -163,7 +164,7 @@ final String DiscountPercentage;
                             width: 80,
                             child: Center(
                               child: Text(
-TripPrice,                                style: TextStyle(
+tripPrice,                                style: TextStyle(
                                     fontSize: 20,
                                     color: ColorsHelp.background),
                               ),
@@ -189,7 +190,7 @@ TripPrice,                                style: TextStyle(
                               width: 80,
                               child: Center(
                                 child: Text(
-                                  DiscountPercentage+"%",
+                                  discountPercentage+"%",
                                   style: TextStyle(
                                       fontSize: 20,
                                       color: ColorsHelp.background),
@@ -203,8 +204,18 @@ TripPrice,                                style: TextStyle(
                 height: 30,
               ),
               Center(
-                child: GestureDetector(
-                  onTap: () {
+                child: ElevatedButton(
+                  child: Text("Book now"),
+                  onPressed: onPressed,
+                  style: ElevatedButton.styleFrom(
+                    primary: ColorsHelp.background,
+                    onPrimary: Colors.white,
+                  ),
+
+                ),
+                /*child: GestureDetector(
+                  onTap: onPressed
+                  *//*() {
                     showAnimatedDialog(
                       context: context,
                       barrierDismissible: true,
@@ -218,7 +229,7 @@ TripPrice,                                style: TextStyle(
                       curve: Curves.fastOutSlowIn,
                       duration: Duration(seconds: 1),
                     );
-                  },
+                  }*//*,
                   child: Container(
                     height: 50,
                     width: 120,
@@ -232,7 +243,7 @@ TripPrice,                                style: TextStyle(
                       ),
                     ),
                   ),
-                ),
+                ),*/
               )
             ],
           ),
