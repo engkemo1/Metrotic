@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -342,11 +343,28 @@ class AuthService {
       "balance": balance - price,
     }).then((_) {
       //showSnackBar(context, "Profile updated");
-      Navigator.of(context).pushReplacementNamed(Home.routeName);
+      showConfirmation(context: context);
+      //Navigator.of(context).pushReplacementNamed(Home.routeName);
     });
   }
 
   Future<void> signOut() async {
     await _firebaseAuth.signOut();
+  }
+
+  void showConfirmation({required BuildContext context}){
+    showAnimatedDialog(
+                  context: context,
+                  barrierDismissible: true,
+                  builder: (BuildContext context) {
+                    return Align(
+                      alignment: Alignment.center,
+                      child: Image.asset("assets/done.png"),
+                    );
+                  },
+                  animationType: DialogTransitionType.scale,
+                  curve: Curves.fastOutSlowIn,
+                  duration: Duration(seconds: 1),
+                );
   }
 }
