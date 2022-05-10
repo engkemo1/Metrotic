@@ -37,10 +37,11 @@ class AuthService {
       FirebaseFirestore.instance.collection('Tickets');
   CollectionReference walletsReference =
       FirebaseFirestore.instance.collection('Wallets');
+  CollectionReference cardsReference =
+  FirebaseFirestore.instance.collection('Cards');
 
   CollectionReference subscriptionsReference =
-  FirebaseFirestore.instance.collection('Subscriptions');
-
+      FirebaseFirestore.instance.collection('Subscriptions');
 
   Future<String?> resetPassword({required String email}) async {
     try {
@@ -251,6 +252,20 @@ class AuthService {
     }).then((value) {});
   }
 
+  Future<void> addCard({
+    required String uid,
+    required String cardNumber,
+    required String expiryDate,
+    required int name,
+  }) async {
+    await cardsReference.add({
+      'uid': uid,
+      'cardNumber': cardNumber,
+      'expiryDate': expiryDate,
+      'name': name,
+    }).then((value) {});
+  }
+
   Future<void> createSub(
       {required String uid,
       required String walletId,
@@ -352,19 +367,19 @@ class AuthService {
     await _firebaseAuth.signOut();
   }
 
-  void showConfirmation({required BuildContext context}){
+  void showConfirmation({required BuildContext context}) {
     showAnimatedDialog(
-                  context: context,
-                  barrierDismissible: true,
-                  builder: (BuildContext context) {
-                    return Align(
-                      alignment: Alignment.center,
-                      child: Image.asset("assets/done.png"),
-                    );
-                  },
-                  animationType: DialogTransitionType.scale,
-                  curve: Curves.fastOutSlowIn,
-                  duration: Duration(seconds: 1),
-                );
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return Align(
+          alignment: Alignment.center,
+          child: Image.asset("assets/done.png"),
+        );
+      },
+      animationType: DialogTransitionType.scale,
+      curve: Curves.fastOutSlowIn,
+      duration: Duration(seconds: 1),
+    );
   }
 }

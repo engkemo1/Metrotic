@@ -101,7 +101,7 @@ class _SupDet3State extends State<SupDet3> {
                     subId: subscriptionsPrices[1]["subId"].toString());
               },
             ),
-            SizedBox(
+            /*SizedBox(
               height: 20,
             ),
             Divider(
@@ -168,7 +168,7 @@ class _SupDet3State extends State<SupDet3> {
                     ticket: false,
                     subId: subscriptionsPrices[3]["subId"].toString());
               },
-            )
+            )*/
           ],
         ),
       ),
