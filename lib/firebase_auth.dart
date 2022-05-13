@@ -256,14 +256,19 @@ class AuthService {
     required String uid,
     required String cardNumber,
     required String expiryDate,
-    required int name,
+    required String name,
+    required BuildContext context
   }) async {
     await cardsReference.add({
       'uid': uid,
       'cardNumber': cardNumber,
       'expiryDate': expiryDate,
       'name': name,
-    }).then((value) {});
+    }).then((value) {
+
+      Navigator.push(context, MaterialPageRoute(builder: (_) => Home()));
+
+    });
   }
 
   Future<void> createSub(
@@ -349,6 +354,41 @@ class AuthService {
     });
   }
 
+  Future<void> getBalance(
+      {required String uid,
+        required String noOfStations,
+        required String subId,
+        required int price,
+        required bool ticket,
+        required BuildContext context}) async {
+    await walletsReference.where('uid', isEqualTo: uid).get().then((value) {
+      value.docs.forEach((result) {
+        var balance = result.get('balance');
+
+        if (balance >= price) {
+          print("$balance");
+          ticket
+              ? createTicket(
+              uid: uid,
+              walletId: result.id,
+              noOfStations: noOfStations,
+              price: price,
+              balance: balance,
+              context: context)
+              : createSub(
+              uid: uid,
+              walletId: result.id,
+              subId: subId,
+              price: price,
+              balance: balance,
+              context: context);
+        } else {
+          //showSnackBar(context, "Insufficient balance");
+        }
+      });
+    });
+  }
+
   Future<void> updateWallet(
       {required String walletId,
       required int price,
@@ -382,4 +422,5 @@ class AuthService {
       duration: Duration(seconds: 1),
     );
   }
+
 }

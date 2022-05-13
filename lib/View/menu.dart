@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:test/View/Profile2.dart';
 import 'package:test/View/supsciptions/Subscription%20Details.dart';
 import 'package:test/View/supsciptions/TicketPrice.dart';
 
@@ -56,7 +57,10 @@ class Menu extends StatelessWidget {
                   height: 20,
                 ),
                 GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+
+                      Navigator.push(context, MaterialPageRoute(builder: (_) => Profile()));
+                    },
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -90,41 +94,41 @@ class Menu extends StatelessWidget {
                 SizedBox(
                   height: 15,
                 ),
-                GestureDetector(
-                    onTap: () {},
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '- Current balance',
-                          style: TextStyle(
-                            fontFamily: 'Montserrat',
-                            fontSize: 23,
-                            color: const Color(0xffffffff),
-                            fontWeight: FontWeight.w700,
-                            height: 1.608695652173913,
-                          ),
-                          textHeightBehavior: TextHeightBehavior(
-                              applyHeightToFirstAscent: false),
-                          softWrap: false,
-                        ),
-                        Text(
-                          '    Control payment methods and wallet.',
-                          style: TextStyle(
-                            fontFamily: 'Montserrat',
-                            fontSize: 12,
-                            color: const Color(0xffffffff),
-                            height: 1.5833333333333333,
-                          ),
-                          textHeightBehavior: TextHeightBehavior(
-                              applyHeightToFirstAscent: false),
-                          softWrap: false,
-                        ),
-                      ],
-                    )),
-                SizedBox(
-                  height: 15,
-                ),
+                // GestureDetector(
+                //     onTap: () {},
+                //     child: Column(
+                //       crossAxisAlignment: CrossAxisAlignment.start,
+                //       children: [
+                //         Text(
+                //           '- Current balance',
+                //           style: TextStyle(
+                //             fontFamily: 'Montserrat',
+                //             fontSize: 23,
+                //             color: const Color(0xffffffff),
+                //             fontWeight: FontWeight.w700,
+                //             height: 1.608695652173913,
+                //           ),
+                //           textHeightBehavior: TextHeightBehavior(
+                //               applyHeightToFirstAscent: false),
+                //           softWrap: false,
+                //         ),
+                //         Text(
+                //           '    Control payment methods and wallet.',
+                //           style: TextStyle(
+                //             fontFamily: 'Montserrat',
+                //             fontSize: 12,
+                //             color: const Color(0xffffffff),
+                //             height: 1.5833333333333333,
+                //           ),
+                //           textHeightBehavior: TextHeightBehavior(
+                //               applyHeightToFirstAscent: false),
+                //           softWrap: false,
+                //         ),
+                //       ],
+                //     )),
+                // SizedBox(
+                //   height: 15,
+                // ),
                 GestureDetector(
                   onTap: () {
                     Navigator.push(context,

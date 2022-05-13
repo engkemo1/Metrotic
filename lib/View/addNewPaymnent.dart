@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../firebase_auth.dart';
 import '../widget/AppBar.dart';
 
 class AddNewPayment extends StatefulWidget {
@@ -11,10 +14,17 @@ class AddNewPayment extends StatefulWidget {
 }
 
 class _AddNewPaymentState extends State<AddNewPayment> {
+  String uid = "";
   final TextEditingController cardNoController = TextEditingController();
   final TextEditingController expiryDateController = TextEditingController();
   final TextEditingController cvvController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    getUser();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -109,11 +119,12 @@ class _AddNewPaymentState extends State<AddNewPayment> {
                     TextField(
                       controller: nameController,
                       decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(12.0))),
-                          labelText: "Cardholder name",
-                          hintText: "Enter cardholder's full name",),
+                        border: OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(12.0))),
+                        labelText: "Cardholder name",
+                        hintText: "Enter cardholder's full name",
+                      ),
                       keyboardType: TextInputType.text,
                     ),
                     SizedBox(
@@ -124,7 +135,14 @@ class _AddNewPaymentState extends State<AddNewPayment> {
                           minimumSize: Size.fromHeight(
                               40), // fromHeight use double.infinity as width and 40 is the height
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          context.read<AuthService>().addCard(
+                              uid: uid,
+                              cardNumber: cardNoController.text.trim(),
+                              expiryDate: expiryDateController.text.trim(),
+                              name: nameController.text.trim(),
+                              context: context);
+                        },
                         child: Text("Add Card")),
                   ],
                 ),
@@ -134,5 +152,14 @@ class _AddNewPaymentState extends State<AddNewPayment> {
         ),
       ),
     );
+  }
+
+  Future<void> getUser() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    setState(() {
+      uid = prefs.getString("uid") ?? "";
+    });
+    //return User(uid: "",email: email ,name: name, phone: phone, tagID: tagID, nationalID: nationalID);
   }
 }

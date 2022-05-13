@@ -40,9 +40,9 @@ class _SignUpState extends State<SignUp> {
                             child: BackGroundSignUp(),
                         ),
                         SizedBox(
-                            height: 40,
-                        ),
-                        Container(
+              height: 40,
+            ),
+            Container(
                             width: double.infinity,
                             padding: EdgeInsets.only(left:width>1000?width*0.17:width> 500?width*0.12:25,right: width>1000?width*0.17:width> 500?width*0.12:25),
                             //margin: EdgeInsets.only(left:width>1000?width*0.17:width> 500?width*0.12:25,right: width>1000?width*0.17:width> 500?width*0.12:25),
