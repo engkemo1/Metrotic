@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:test/View/rechargeBalance.dart';
 
 import '../firebase_auth.dart';
 import '../widget/AppBar.dart';
@@ -54,7 +55,10 @@ class _AddNewPaymentState extends State<AddNewPayment> {
                               fontSize: 16,
                               color: Colors.black),
                         ),
-                        Icon(Icons.close),
+                        IconButton(icon: Icon(Icons.close), onPressed: () {
+                          Navigator.pop(context, MaterialPageRoute(builder: (_) => RechargeBalance()));
+
+                        },),
                       ],
                     ),
                     Divider(

@@ -9,6 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'View/HomScreen.dart';
+import 'View/rechargeBalance.dart';
 import 'View/verification.dart';
 import 'models/user.dart' as myUser;
 
@@ -38,7 +39,7 @@ class AuthService {
   CollectionReference walletsReference =
       FirebaseFirestore.instance.collection('Wallets');
   CollectionReference cardsReference =
-  FirebaseFirestore.instance.collection('Cards');
+      FirebaseFirestore.instance.collection('Cards');
 
   CollectionReference subscriptionsReference =
       FirebaseFirestore.instance.collection('Subscriptions');
@@ -252,22 +253,20 @@ class AuthService {
     }).then((value) {});
   }
 
-  Future<void> addCard({
-    required String uid,
-    required String cardNumber,
-    required String expiryDate,
-    required String name,
-    required BuildContext context
-  }) async {
+  Future<void> addCard(
+      {required String uid,
+      required String cardNumber,
+      required String expiryDate,
+      required String name,
+      required BuildContext context}) async {
     await cardsReference.add({
       'uid': uid,
       'cardNumber': cardNumber,
       'expiryDate': expiryDate,
       'name': name,
     }).then((value) {
-
-      Navigator.push(context, MaterialPageRoute(builder: (_) => Home()));
-
+      Navigator.pop(
+          context, MaterialPageRoute(builder: (_) => RechargeBalance()));
     });
   }
 
@@ -356,11 +355,11 @@ class AuthService {
 
   Future<void> getBalance(
       {required String uid,
-        required String noOfStations,
-        required String subId,
-        required int price,
-        required bool ticket,
-        required BuildContext context}) async {
+      required String noOfStations,
+      required String subId,
+      required int price,
+      required bool ticket,
+      required BuildContext context}) async {
     await walletsReference.where('uid', isEqualTo: uid).get().then((value) {
       value.docs.forEach((result) {
         var balance = result.get('balance');
@@ -369,19 +368,19 @@ class AuthService {
           print("$balance");
           ticket
               ? createTicket(
-              uid: uid,
-              walletId: result.id,
-              noOfStations: noOfStations,
-              price: price,
-              balance: balance,
-              context: context)
+                  uid: uid,
+                  walletId: result.id,
+                  noOfStations: noOfStations,
+                  price: price,
+                  balance: balance,
+                  context: context)
               : createSub(
-              uid: uid,
-              walletId: result.id,
-              subId: subId,
-              price: price,
-              balance: balance,
-              context: context);
+                  uid: uid,
+                  walletId: result.id,
+                  subId: subId,
+                  price: price,
+                  balance: balance,
+                  context: context);
         } else {
           //showSnackBar(context, "Insufficient balance");
         }
@@ -403,6 +402,21 @@ class AuthService {
     });
   }
 
+  Future<void> rechargeWallet(
+      {required String walletId,
+      required int balance,
+      required BuildContext context}) async {
+    await walletsReference.doc(walletId).update({
+      "balance": balance,
+    }).then((_) {
+      //showSnackBar(context, "Profile updated");
+
+      Navigator.push(context, MaterialPageRoute(builder: (_) => Home()));
+    });
+
+    showSnackBar(context, "Wallet charged");
+  }
+
   Future<void> signOut() async {
     await _firebaseAuth.signOut();
   }
@@ -422,5 +436,4 @@ class AuthService {
       duration: Duration(seconds: 1),
     );
   }
-
 }
