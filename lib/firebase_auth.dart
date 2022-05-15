@@ -108,6 +108,7 @@ class AuthService {
     } on auth.FirebaseAuthException catch (e) {
       showSnackBar(context, e.message!);
       //log(e.message!);
+      
     }
   }
 
