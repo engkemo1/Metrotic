@@ -107,7 +107,7 @@ class AuthService {
       getUser(email: email, context: context);
     } on auth.FirebaseAuthException catch (e) {
       showSnackBar(context, e.message!);
-      log(e.message!);
+      //log(e.message!);
     }
   }
 
