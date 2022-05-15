@@ -15,7 +15,6 @@ import 'models/user.dart' as myUser;
 
 class AuthService {
   final auth.FirebaseAuth _firebaseAuth;
-
   AuthService(this._firebaseAuth);
 
 /*
@@ -124,7 +123,7 @@ class AuthService {
             tagID: result.get('tagID'),
             nationalID: result.get('nationalID'));
 
-        print(result.id);
+        //print(result.id);
         _saveUser(user);
 
         Navigator.of(context).pushReplacementNamed(Home.routeName);
