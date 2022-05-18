@@ -22,6 +22,8 @@ class _RechargeBalanceState extends State<RechargeBalance> {
   int balance = 0;
   String walletId = '';
   String selectedCard = "Select your Card";
+  List<String> cards = [];
+  int index = 0;
 
 
   final TextEditingController paymentController = TextEditingController();
@@ -138,7 +140,7 @@ class _RechargeBalanceState extends State<RechargeBalance> {
                               );
                             }
                             if(snapshot.data!.docs.isNotEmpty){
-                              selectedCard = snapshot.data!.docs[0].get('cardNumber');
+                              selectedCard = snapshot.data!.docs[index].get('cardNumber');
                             }
 
                             return DropdownButton<String>(
@@ -155,10 +157,14 @@ class _RechargeBalanceState extends State<RechargeBalance> {
                               onChanged: (String? newValue) {
                                 setState(() {
                                   selectedCard = newValue!;
+
+                                  index = cards.indexOf(selectedCard);
                                 });
                               },
                               items: snapshot.data!.docs.map<DropdownMenuItem<String>>(
                                   (DocumentSnapshot document) {
+
+                                    cards.add(document.get('cardNumber'));
                                     return DropdownMenuItem<String>(
                                   value: document.get('cardNumber'),
                                   child: Text(document.get('cardNumber')),
